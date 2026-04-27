@@ -1,0 +1,25 @@
+import { pgTable, uuid, varchar, text, date, integer, boolean, timestamp } from 'drizzle-orm/pg-core'
+
+export const workshops = pgTable('workshops', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  title: varchar('title', { length: 200 }).notNull(),
+  category: varchar('category', { length: 50 }).notNull(),
+  slug: varchar('slug', { length: 100 }).notNull().unique(),
+  description: text('description'),
+  dateDisplay: varchar('date_display', { length: 100 }).notNull(),
+  startDate: date('start_date').notNull(),
+  endDate: date('end_date').notNull(),
+  location: varchar('location', { length: 100 }).notNull(),
+  duration: varchar('duration', { length: 50 }).notNull(),
+  level: varchar('level', { length: 20 }).notNull(),
+  price: integer('price').notNull(),
+  priceDisplay: varchar('price_display', { length: 30 }).notNull(),
+  totalSpots: integer('total_spots').notNull().default(20),
+  spotsFilled: integer('spots_filled').notNull().default(0),
+  instructor: varchar('instructor', { length: 200 }),
+  highlight: boolean('highlight').notNull().default(false),
+  isActive: boolean('is_active').notNull().default(true),
+  sortOrder: integer('sort_order').notNull().default(0),
+  createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+  updatedAt: timestamp('updated_at', { withTimezone: true }).notNull().defaultNow(),
+})

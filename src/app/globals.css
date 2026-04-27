@@ -1,0 +1,249 @@
+@import "tailwindcss";
+
+:root {
+  --color-bg: #C7C7C7;
+  --color-fg: #1e2d36;
+}
+
+@theme inline {
+  --color-background: var(--color-bg);
+  --color-foreground: var(--color-fg);
+
+  --color-neel-rust:     #C8A96E;
+  --color-neel-softteal: #9EC4C8;
+  --color-neel-tallow:   #D4A84B;
+  --color-neel-ink:      #141414;
+  --color-neel-cream:    #C7C7C7;
+
+  --font-sans: var(--font-dm-sans);
+  --font-display: var(--font-neel-display), system-ui, sans-serif;
+}
+
+/* ═══ Admin Theme ═══ */
+[data-admin-theme="dark"] {
+  --admin-bg: #0a0a0a;
+  --admin-bg-card: rgba(255, 255, 255, 0.03);
+  --admin-bg-card-hover: rgba(255, 255, 255, 0.05);
+  --admin-border: rgba(255, 255, 255, 0.06);
+  --admin-text: #ffffff;
+  --admin-text-secondary: rgba(255, 255, 255, 0.4);
+  --admin-text-muted: rgba(255, 255, 255, 0.2);
+  --admin-sidebar: #0c0c0c;
+  --admin-input-bg: rgba(255, 255, 255, 0.04);
+  --admin-panel: #111111;
+}
+
+[data-admin-theme="light"] {
+  --admin-bg: #f0ece6;
+  --admin-bg-card: #f7f5f1;
+  --admin-bg-card-hover: #f2efe9;
+  --admin-border: rgba(0, 0, 0, 0.06);
+  --admin-text: #2c2c2c;
+  --admin-text-secondary: rgba(44, 44, 44, 0.55);
+  --admin-text-muted: rgba(44, 44, 44, 0.3);
+  --admin-sidebar: #1a1a1a;
+  --admin-input-bg: rgba(0, 0, 0, 0.025);
+  --admin-panel: #f7f5f1;
+}
+
+/* Light mode overrides for admin content */
+[data-admin-theme="light"] main [class*="bg-white/[0.03]"],
+[data-admin-theme="light"] main [class*="bg-white/\[0.03\]"] {
+  background: #f7f5f1 !important;
+  border-color: rgba(0,0,0,0.05) !important;
+}
+[data-admin-theme="light"] main [class*="bg-\[#111\]"],
+[data-admin-theme="light"] main [class*="bg-\[#0a0a0a\]"] {
+  background: #f7f5f1 !important;
+}
+[data-admin-theme="light"] main {
+  --tw-text-opacity: 1;
+  color: #2c2c2c;
+}
+[data-admin-theme="light"] main h1, [data-admin-theme="light"] main h2, [data-admin-theme="light"] main h3 {
+  color: #2c2c2c !important;
+}
+[data-admin-theme="light"] main p, [data-admin-theme="light"] main span, [data-admin-theme="light"] main td {
+  --admin-t: inherit;
+}
+[data-admin-theme="light"] main table thead th {
+  color: rgba(0,0,0,0.35) !important;
+}
+[data-admin-theme="light"] main table tbody td {
+  color: rgba(0,0,0,0.6) !important;
+  border-color: rgba(0,0,0,0.04) !important;
+}
+[data-admin-theme="light"] main table tbody tr:hover {
+  background: rgba(0,0,0,0.015) !important;
+}
+[data-admin-theme="light"] main input, [data-admin-theme="light"] main textarea, [data-admin-theme="light"] main select {
+  background: #f0ece6 !important;
+  border-color: rgba(0,0,0,0.07) !important;
+  color: #2c2c2c !important;
+}
+
+/* ═══ Comprehensive admin light-mode overrides ═══ */
+
+/* --- Text: text-white → dark text --- */
+[data-admin-theme="light"] main .text-white {
+  color: #1a1a1a !important;
+}
+
+/* --- Text opacity variants: text-white/XX → dark opacity text --- */
+[data-admin-theme="light"] main [class*="text-white\\/"] {
+  color: rgba(0, 0, 0, 0.5) !important;
+}
+[data-admin-theme="light"] main .text-white\/10,
+[data-admin-theme="light"] main .text-white\/15,
+[data-admin-theme="light"] main .text-white\/20 {
+  color: rgba(0, 0, 0, 0.25) !important;
+}
+[data-admin-theme="light"] main .text-white\/25,
+[data-admin-theme="light"] main .text-white\/30 {
+  color: rgba(0, 0, 0, 0.3) !important;
+}
+[data-admin-theme="light"] main .text-white\/40,
+[data-admin-theme="light"] main .text-white\/50 {
+  color: rgba(0, 0, 0, 0.5) !important;
+}
+[data-admin-theme="light"] main .text-white\/60,
+[data-admin-theme="light"] main .text-white\/70 {
+  color: rgba(0, 0, 0, 0.6) !important;
+}
+[data-admin-theme="light"] main .text-white\/80,
+[data-admin-theme="light"] main .text-white\/90 {
+  color: rgba(0, 0, 0, 0.8) !important;
+}
+
+/* --- Card backgrounds: bg-white/[0.0X] → warm cream cards --- */
+[data-admin-theme="light"] main [class*="bg-white\\/\\[0\\.03\\]"],
+[data-admin-theme="light"] main [class*="bg-white\\/\\[0\\.04\\]"] {
+  background: #f7f5f1 !important;
+  border: 1px solid rgba(0, 0, 0, 0.05) !important;
+}
+[data-admin-theme="light"] main [class*="bg-white\\/\\[0\\.06\\]"],
+[data-admin-theme="light"] main [class*="bg-white\\/\\[0\\.08\\]"] {
+  background: #f2efe9 !important;
+  border: 1px solid rgba(0, 0, 0, 0.05) !important;
+}
+[data-admin-theme="light"] main [class*="bg-white\\/\\[0\\.1\\]"],
+[data-admin-theme="light"] main [class*="bg-white\\/\\[0\\.12\\]"],
+[data-admin-theme="light"] main [class*="bg-white\\/\\[0\\.15\\]"] {
+  background: #ebe8e1 !important;
+}
+[data-admin-theme="light"] main .bg-white\/5,
+[data-admin-theme="light"] main .bg-white\/10 {
+  background: rgba(0, 0, 0, 0.02) !important;
+}
+
+/* --- Borders: border-white/[0.0X] → light borders --- */
+[data-admin-theme="light"] main [class*="border-white\\/\\[0\\.04\\]"] {
+  border-color: rgba(0, 0, 0, 0.06) !important;
+}
+[data-admin-theme="light"] main [class*="border-white\\/\\[0\\.06\\]"] {
+  border-color: rgba(0, 0, 0, 0.06) !important;
+}
+[data-admin-theme="light"] main [class*="border-white\\/\\[0\\.08\\]"] {
+  border-color: rgba(0, 0, 0, 0.08) !important;
+}
+[data-admin-theme="light"] main [class*="border-white\\/\\[0\\.1\\]"],
+[data-admin-theme="light"] main [class*="border-white\\/\\[0\\.12\\]"] {
+  border-color: rgba(0, 0, 0, 0.1) !important;
+}
+[data-admin-theme="light"] main .border-white\/5,
+[data-admin-theme="light"] main .border-white\/10,
+[data-admin-theme="light"] main .border-white\/20 {
+  border-color: rgba(0, 0, 0, 0.08) !important;
+}
+
+/* --- Dark backgrounds → warm light backgrounds --- */
+[data-admin-theme="light"] main [class*="bg-\\[\\#111\\]"],
+[data-admin-theme="light"] main [class*="bg-\\[\\#111111\\]"] {
+  background: #f7f5f1 !important;
+}
+[data-admin-theme="light"] main [class*="bg-\\[\\#1a1a1a\\]"] {
+  background: #f0ece6 !important;
+}
+[data-admin-theme="light"] main [class*="bg-\\[\\#0a0a0a\\]"],
+[data-admin-theme="light"] main [class*="bg-\\[\\#0c0c0c\\]"] {
+  background: #f7f5f1 !important;
+}
+[data-admin-theme="light"] main [class*="bg-\\[\\#141414\\]"],
+[data-admin-theme="light"] main [class*="bg-\\[\\#181818\\]"] {
+  background: #f2efe9 !important;
+}
+[data-admin-theme="light"] main .bg-black,
+[data-admin-theme="light"] main .bg-black\/50 {
+  background: rgba(0, 0, 0, 0.025) !important;
+}
+
+/* --- Placeholder text --- */
+[data-admin-theme="light"] main input::placeholder,
+[data-admin-theme="light"] main textarea::placeholder {
+  color: rgba(0, 0, 0, 0.3) !important;
+}
+[data-admin-theme="light"] main [class*="placeholder\\:text-white"] input::placeholder,
+[data-admin-theme="light"] main [class*="placeholder\\:text-white"] textarea::placeholder,
+[data-admin-theme="light"] main input[class*="placeholder\\:text-white"]::placeholder,
+[data-admin-theme="light"] main textarea[class*="placeholder\\:text-white"]::placeholder {
+  color: rgba(0, 0, 0, 0.3) !important;
+}
+
+/* --- Divide colors --- */
+[data-admin-theme="light"] main [class*="divide-white\\/"] > * + * {
+  border-color: rgba(0, 0, 0, 0.06) !important;
+}
+
+/* --- Ring colors --- */
+[data-admin-theme="light"] main [class*="ring-white\\/"] {
+  --tw-ring-color: rgba(0, 0, 0, 0.08) !important;
+}
+
+/* --- Hover states for cards/rows --- */
+[data-admin-theme="light"] main [class*="hover\\:bg-white\\/"] :hover,
+[data-admin-theme="light"] main [class*="hover\\:bg-white\\/"].group:hover {
+  background: rgba(0, 0, 0, 0.03) !important;
+}
+
+/* --- Scrollbar and misc --- */
+[data-admin-theme="light"] main ::-webkit-scrollbar-track {
+  background: #f0ece6;
+}
+[data-admin-theme="light"] main ::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.15);
+  border-radius: 4px;
+}
+[data-admin-theme="light"] main ::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 0, 0, 0.25);
+}
+
+html, body {
+  overflow-x: hidden;
+  overscroll-behavior: none;
+}
+
+body {
+  background: var(--color-bg);
+  color: var(--color-fg);
+}
+
+::selection {
+  background: var(--color-neel-rust);
+  color: #060F0B;
+}
+
+img {
+  transition: filter 0.6s ease;
+}
+
+/* Global film-grain noise overlay */
+.noise-overlay {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 70;
+  opacity: 0.045;
+  mix-blend-mode: multiply;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 320 320' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
