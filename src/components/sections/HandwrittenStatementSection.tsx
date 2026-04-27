@@ -8,7 +8,8 @@ gsap.registerPlugin(ScrollTrigger)
 
 const LINES = ['MOST OF OUR', 'CLIENT WORK', 'COMES FROM']
 const BG_COLOR = '#C7C7C7'
-const HEADLINE_FONT = "var(--font-neel-display), 'Cormorant Garamond', serif"
+const HEADLINE = "var(--font-neel-display), 'Playfair Display', serif"
+const SCRIPT = "var(--font-neel-script), 'Cormorant Garamond', serif"
 const RUST = '#C8A96E'
 
 export default function HandwrittenStatementSection() {
@@ -31,7 +32,7 @@ export default function HandwrittenStatementSection() {
       const lines = lineRefs.current.filter(Boolean) as HTMLDivElement[]
       if (!container || !textBlock || !dot || !lastLine || !handwritten || !pen || lines.length === 0) return
 
-      gsap.set(textBlock, { x: '18vw' })
+      gsap.set(textBlock, { x: '12vw' })
       gsap.set(lines, { clipPath: 'inset(0 100% 0 0)' })
       gsap.set(lastLine, { clipPath: 'inset(0 100% 0 0)' })
       gsap.set(handwritten, { clipPath: 'inset(0 100% 0 0)' })
@@ -48,7 +49,6 @@ export default function HandwrittenStatementSection() {
         },
       })
 
-      // Text block drifts from center to left during line reveals
       tl.to(textBlock, {
         x: 0,
         duration: 0.45,
@@ -109,11 +109,11 @@ export default function HandwrittenStatementSection() {
         style={{ willChange: 'transform' }}
       >
         <div
-          className="text-neel-ink uppercase leading-[0.88] italic"
+          className="text-neel-ink uppercase leading-[0.92]"
           style={{
-            fontFamily: HEADLINE_FONT,
-            fontSize: 'clamp(5rem, 13vw, 14rem)',
-            fontWeight: 400,
+            fontFamily: HEADLINE,
+            fontSize: 'clamp(4.5rem, 11.5vw, 12rem)',
+            fontWeight: 900,
           }}
         >
           {LINES.map((line, i) => (
@@ -135,13 +135,13 @@ export default function HandwrittenStatementSection() {
               TRUSTED
             </div>
 
-            <div className="relative inline-block" style={{ marginLeft: '-0.05em', paddingRight: '0.35em' }}>
+            <div className="relative inline-block" style={{ marginLeft: '0.15em', paddingRight: '0.35em' }}>
               <span
                 ref={handwrittenRef}
                 className="inline-block italic"
                 style={{
-                  fontFamily: 'var(--font-neel-display), serif',
-                  fontSize: '1.15em',
+                  fontFamily: SCRIPT,
+                  fontSize: '1.1em',
                   color: RUST,
                   fontWeight: 300,
                   textTransform: 'none',
@@ -182,7 +182,6 @@ export default function HandwrittenStatementSection() {
           </div>
         </div>
       </div>
-
     </div>
   )
 }

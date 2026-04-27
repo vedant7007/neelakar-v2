@@ -6,7 +6,7 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger'
 
 gsap.registerPlugin(ScrollTrigger)
 
-const HEADLINE_FONT = "var(--font-neel-display), 'Cormorant Garamond', serif"
+const HEADLINE_FONT = "var(--font-neel-display), 'Playfair Display', serif"
 const GOLD = '#C8A96E'
 
 const SERVICE_CARDS = [
