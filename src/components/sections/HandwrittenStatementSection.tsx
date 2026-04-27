@@ -8,7 +8,7 @@ gsap.registerPlugin(ScrollTrigger)
 
 const LINES = ['MOST OF OUR', 'CLIENT WORK', 'COMES FROM']
 const BG_COLOR = '#C7C7C7'
-const HEADLINE_FONT = "'all-round-gothic', sans-serif"
+const HEADLINE_FONT = "var(--font-neel-display), 'Cormorant Garamond', serif"
 const RUST = '#C8A96E'
 
 export default function HandwrittenStatementSection() {
@@ -105,14 +105,15 @@ export default function HandwrittenStatementSection() {
     >
       <div
         ref={textBlockRef}
-        className="pl-[5vw] pr-[5vw] w-full"
+        className="pl-[4vw] pr-[4vw] w-full"
         style={{ willChange: 'transform' }}
       >
         <div
-          className="font-black text-neel-ink uppercase leading-[0.92]"
+          className="text-neel-ink uppercase leading-[0.88] italic"
           style={{
             fontFamily: HEADLINE_FONT,
-            fontSize: 'clamp(3rem, 9.5vw, 8rem)',
+            fontSize: 'clamp(5rem, 13vw, 14rem)',
+            fontWeight: 400,
           }}
         >
           {LINES.map((line, i) => (
@@ -137,12 +138,12 @@ export default function HandwrittenStatementSection() {
             <div className="relative inline-block" style={{ marginLeft: '-0.05em', paddingRight: '0.35em' }}>
               <span
                 ref={handwrittenRef}
-                className="inline-block"
+                className="inline-block italic"
                 style={{
-                  fontFamily: 'var(--font-caveat), cursive',
-                  fontSize: '1.1em',
+                  fontFamily: 'var(--font-neel-display), serif',
+                  fontSize: '1.15em',
                   color: RUST,
-                  fontWeight: 400,
+                  fontWeight: 300,
                   textTransform: 'none',
                   lineHeight: 1,
                   willChange: 'clip-path',

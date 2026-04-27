@@ -19,13 +19,13 @@ export default function Home() {
   return (
     <main className="overflow-x-hidden" style={{ backgroundColor: '#060F0B' }}>
       <div className="fixed top-5 left-5 z-[100] pointer-events-none mix-blend-difference">
-        <div className="relative w-[34px] h-[34px]">
+        <div className="relative w-[44px] h-[44px]">
           <Image
             src="/NCH_logo_white.png"
             alt="Neelakar"
             fill
-            className="object-contain opacity-70"
-            sizes="34px"
+            className="object-contain opacity-80"
+            sizes="44px"
           />
         </div>
       </div>

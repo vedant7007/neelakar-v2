@@ -87,28 +87,27 @@ export default function CampaignsSection() {
   return (
     <div className="relative z-[4]" style={{ backgroundColor: BG_COLOR }}>
       <div className="w-full pt-[10vh] pb-[6vh] px-[5vw]">
-        <div className="flex items-end gap-5">
-          <h2
-            className="text-white font-light italic leading-[1] tracking-wide"
-            style={{
-              fontFamily: 'var(--font-neel-display), serif',
-              fontSize: 'clamp(3rem, 8vw, 7rem)',
-            }}
-          >
-            Our Campaigns
-          </h2>
-          <span
-            className="text-white/20 pb-[0.35em] font-light"
-            style={{
-              fontFamily: 'var(--font-dm-sans), sans-serif',
-              fontSize: 'clamp(0.75rem, 1vw, 1rem)',
-              letterSpacing: '0.25em',
-              textTransform: 'uppercase',
-            }}
-          >
-            Selected Works
-          </span>
-        </div>
+        <span
+          className="block text-white/25 uppercase mb-4"
+          style={{
+            fontFamily: 'var(--font-dm-sans), sans-serif',
+            fontSize: 'clamp(0.5rem, 0.65vw, 0.7rem)',
+            letterSpacing: '0.5em',
+            fontWeight: 600,
+          }}
+        >
+          Selected Works
+        </span>
+        <h2
+          className="text-white font-light italic leading-[0.95]"
+          style={{
+            fontFamily: 'var(--font-neel-display), serif',
+            fontSize: 'clamp(3.5rem, 9vw, 9rem)',
+          }}
+        >
+          Our Campaigns
+        </h2>
+        <div className="w-16 h-px bg-white/10 mt-6" />
       </div>
 
       <div

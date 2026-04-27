@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { DM_Sans, Cormorant_Garamond, Caveat } from "next/font/google";
+import { DM_Sans, Cormorant_Garamond } from "next/font/google";
 import "./globals.css";
 
 const dmSans = DM_Sans({
@@ -16,17 +16,14 @@ const cormorant = Cormorant_Garamond({
   display: "swap",
 });
 
-const caveat = Caveat({
-  variable: "--font-caveat",
-  subsets: ["latin"],
-  weight: ["400"],
-  display: "swap",
-});
-
 export const metadata: Metadata = {
   title: "Neelakar Creative House | Luxury Creative Studio",
   description:
     "Neelakar Creative House crafts elevated visual identities for luxury, fashion, and jewellery brands — editorial campaigns, brand worlds, and prestige storytelling.",
+  icons: {
+    icon: "/NCH_logo_white.png",
+    apple: "/NCH_logo_white.png",
+  },
 };
 
 export default function RootLayout({
@@ -37,7 +34,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${dmSans.variable} ${cormorant.variable} ${caveat.variable} h-full`}
+      className={`${dmSans.variable} ${cormorant.variable} h-full`}
     >
       <head>
         <link rel="stylesheet" href="https://use.typekit.net/qfi2uip.css" />

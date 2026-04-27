@@ -6,7 +6,7 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger'
 
 gsap.registerPlugin(ScrollTrigger)
 
-const HEADLINE_FONT = "'all-round-gothic', sans-serif"
+const HEADLINE_FONT = "var(--font-neel-display), 'Cormorant Garamond', serif"
 const GOLD = '#C8A96E'
 
 const SERVICE_CARDS = [
@@ -146,54 +146,66 @@ export default function WhatWeDoSection() {
         <div className="relative" style={{ transformStyle: 'preserve-3d' }}>
           <div
             ref={whatRef}
-            className="font-black uppercase text-black"
-            style={{ ...headlineStyle, willChange: 'transform, opacity' }}
+            className="italic text-black"
+            style={{ ...headlineStyle, fontWeight: 300, willChange: 'transform, opacity' }}
           >
-            WHAT
+            What
           </div>
           <div
             ref={howRef}
-            className="absolute inset-0 font-black uppercase"
+            className="absolute inset-0 italic"
             style={{
               ...headlineStyle,
+              fontWeight: 300,
               color: GOLD,
               willChange: 'transform, opacity',
             }}
           >
-            HOW
+            How
           </div>
         </div>
 
         <div className="flex items-center justify-between my-2">
           <div className="max-w-md pl-[2vw]">
             <p
-              className="text-black/50 font-light leading-relaxed tracking-wide mb-6"
-              style={{ fontSize: 'clamp(0.85rem, 1vw, 1.05rem)' }}
+              className="text-black/40 leading-[1.8] mb-6"
+              style={{
+                fontFamily: "var(--font-dm-sans), sans-serif",
+                fontSize: 'clamp(0.8rem, 0.9vw, 0.95rem)',
+                fontWeight: 300,
+                letterSpacing: '0.02em',
+              }}
             >
               Vision is nothing without execution. We build both.
               We create campaigns, films, and the systems that get them made.
             </p>
             <a
               href="#"
-              className="inline-block px-5 py-2.5 border border-black/80 text-black text-[0.65rem] tracking-[0.25em] uppercase font-semibold hover:bg-black hover:text-white transition-colors duration-300"
+              className="inline-block px-5 py-2.5 border border-black/80 text-black hover:bg-black hover:text-white transition-colors duration-300 uppercase"
+              style={{
+                fontFamily: "var(--font-dm-sans), sans-serif",
+                fontSize: 'clamp(0.5rem, 0.6vw, 0.65rem)',
+                letterSpacing: '0.35em',
+                fontWeight: 600,
+              }}
             >
-              Our Services ↗
+              Our Services
             </a>
           </div>
 
           <div
-            className="font-black uppercase text-black"
-            style={headlineStyle}
+            className="italic text-black"
+            style={{ ...headlineStyle, fontWeight: 300 }}
           >
-            WE
+            We
           </div>
         </div>
 
         <div
-          className="font-black uppercase text-black"
-          style={headlineStyle}
+          className="italic text-black"
+          style={{ ...headlineStyle, fontWeight: 300 }}
         >
-          DO
+          Do
         </div>
       </div>
 
@@ -221,15 +233,24 @@ export default function WhatWeDoSection() {
             >
               <div>
                 <h3
-                  className="font-black uppercase leading-[1.05] text-black mb-3 whitespace-pre-line"
+                  className="italic leading-[1.05] text-black mb-3 whitespace-pre-line"
                   style={{
                     fontFamily: HEADLINE_FONT,
-                    fontSize: 'clamp(1.6rem, 3.2vw, 2.6rem)',
+                    fontSize: 'clamp(1.8rem, 3.5vw, 2.8rem)',
+                    fontWeight: 400,
                   }}
                 >
                   {card.title}
                 </h3>
-                <p className="text-black/50 font-light leading-relaxed text-[clamp(0.8rem,0.95vw,0.95rem)] max-w-[28ch]">
+                <p
+                  className="text-black/40 leading-[1.7] max-w-[28ch]"
+                  style={{
+                    fontFamily: "var(--font-dm-sans), sans-serif",
+                    fontSize: 'clamp(0.75rem, 0.85vw, 0.9rem)',
+                    fontWeight: 300,
+                    letterSpacing: '0.015em',
+                  }}
+                >
                   {card.description}
                 </p>
               </div>
@@ -239,17 +260,24 @@ export default function WhatWeDoSection() {
                   {card.tags.map((tag) => (
                     <div
                       key={tag}
-                      className="text-black/70 font-semibold text-[clamp(0.8rem,1vw,1rem)]"
+                      className="text-black/50 uppercase"
+                      style={{
+                        fontFamily: "var(--font-dm-sans), sans-serif",
+                        fontSize: 'clamp(0.55rem, 0.65vw, 0.7rem)',
+                        letterSpacing: '0.3em',
+                        fontWeight: 600,
+                      }}
                     >
                       {tag}
                     </div>
                   ))}
                 </div>
                 <span
-                  className="font-light text-black/70 leading-none"
+                  className="italic text-black/15 leading-none"
                   style={{
                     fontFamily: HEADLINE_FONT,
-                    fontSize: 'clamp(2.5rem, 5vw, 4.5rem)',
+                    fontSize: 'clamp(3rem, 6vw, 5.5rem)',
+                    fontWeight: 300,
                   }}
                 >
                   {card.number}
