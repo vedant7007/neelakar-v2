@@ -6,17 +6,6 @@ import CampaignsSection from '@/components/sections/CampaignsSection'
 import WhatWeDoSection from '@/components/sections/WhatWeDoSection'
 import PlaceholderSection from '@/components/sections/PlaceholderSection'
 
-function SectionFade({ from, to }: { from: string; to: string }) {
-  return (
-    <div
-      className="relative w-full h-[40vh] -mt-[1px]"
-      style={{
-        background: `linear-gradient(to bottom, ${from} 0%, ${from} 10%, ${to} 90%, ${to} 100%)`,
-      }}
-    />
-  )
-}
-
 export default function Home() {
   return (
     <main className="overflow-x-hidden" style={{ backgroundColor: '#060F0B' }}>
@@ -33,14 +22,10 @@ export default function Home() {
       </div>
 
       <LogoRevealSection />
-      <SectionFade from="#060F0B" to="#C7C7C7" />
       <HandwrittenStatementSection />
-      <SectionFade from="#C7C7C7" to="#060F0B" />
       <ImageTextCollapseSection />
       <CampaignsSection />
-      <SectionFade from="#060F0B" to="#F5F5F0" />
       <WhatWeDoSection />
-      <SectionFade from="#F5F5F0" to="#060F0B" />
       <PlaceholderSection />
     </main>
   )
