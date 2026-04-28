@@ -1,6 +1,6 @@
 'use client'
 
-import { useRef, useLayoutEffect } from 'react'
+import { useRef, useState, useEffect, useLayoutEffect } from 'react'
 import Image from 'next/image'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
@@ -16,6 +16,14 @@ export default function LogoRevealSection() {
   const lockupRef = useRef<HTMLDivElement>(null)
   const logoRef = useRef<HTMLDivElement>(null)
   const textRef = useRef<HTMLDivElement>(null)
+  const [isMobile, setIsMobile] = useState(false)
+
+  useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth < 768)
+    check()
+    window.addEventListener('resize', check)
+    return () => window.removeEventListener('resize', check)
+  }, [])
 
   useLayoutEffect(() => {
     const ctx = gsap.context(() => {
@@ -71,24 +79,25 @@ export default function LogoRevealSection() {
       className="relative z-[1] w-full h-screen overflow-hidden"
       style={{ backgroundColor: BG_COLOR }}
     >
-      <div className="absolute inset-0 z-0">
-        <LiquidEther
-          colors={['#0FF0FC', '#7B2FFF', '#00FF88', '#5B00D4', '#00C9FF']}
-          mouseForce={13}
-          cursorSize={120}
-          resolution={0.35}
-          iterationsPoisson={16}
-          iterationsViscous={16}
-          isBounce
-          autoDemo
-          autoSpeed={0.4}
-          autoIntensity={2.5}
-          takeoverDuration={0.25}
-          autoResumeDelay={2000}
-          autoRampDuration={0.8}
-          className="!pointer-events-auto !touch-auto"
-        />
-      </div>
+      {!isMobile && (
+        <div className="absolute inset-0 z-0 pointer-events-auto">
+          <LiquidEther
+            colors={['#0FF0FC', '#7B2FFF', '#00FF88', '#5B00D4', '#00C9FF']}
+            mouseForce={5}
+            cursorSize={80}
+            resolution={0.3}
+            iterationsPoisson={12}
+            iterationsViscous={12}
+            isBounce
+            autoDemo={false}
+            autoSpeed={0.2}
+            autoIntensity={1}
+            takeoverDuration={0.3}
+            autoResumeDelay={3000}
+            autoRampDuration={1}
+          />
+        </div>
+      )}
 
       <div
         ref={lockupRef}

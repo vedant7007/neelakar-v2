@@ -9,8 +9,10 @@ import PlaceholderSection from '@/components/sections/PlaceholderSection'
 function SectionFade({ from, to }: { from: string; to: string }) {
   return (
     <div
-      className="relative w-full h-[15vh] -mt-[1px]"
-      style={{ background: `linear-gradient(to bottom, ${from}, ${to})` }}
+      className="relative w-full h-[40vh] -mt-[1px]"
+      style={{
+        background: `linear-gradient(to bottom, ${from} 0%, ${from} 10%, ${to} 90%, ${to} 100%)`,
+      }}
     />
   )
 }
