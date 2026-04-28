@@ -112,7 +112,7 @@ export default function HandwrittenStatementSection() {
           className="text-neel-ink uppercase leading-[0.92]"
           style={{
             fontFamily: HEADLINE,
-            fontSize: 'clamp(4.5rem, 11.5vw, 12rem)',
+            fontSize: 'clamp(3rem, 8.5vw, 9rem)',
             fontWeight: 900,
           }}
         >
