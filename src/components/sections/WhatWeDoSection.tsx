@@ -142,70 +142,64 @@ export default function WhatWeDoSection() {
         className="absolute inset-0 px-[5vw] flex flex-col justify-center"
         style={{ willChange: 'filter, opacity', perspective: '1200px' }}
       >
-        {/* WHAT / HOW flip */}
-        <div className="relative" style={{ transformStyle: 'preserve-3d' }}>
-          <div
-            ref={whatRef}
-            className="italic text-black"
-            style={{ ...headlineStyle, fontWeight: 300, willChange: 'transform, opacity' }}
-          >
-            What
-          </div>
-          <div
-            ref={howRef}
-            className="absolute inset-0 italic"
-            style={{
-              ...headlineStyle,
-              fontWeight: 300,
-              color: GOLD,
-              willChange: 'transform, opacity',
-            }}
-          >
-            How
-          </div>
-        </div>
-
-        <div className="flex items-center justify-between my-2">
-          <div className="max-w-md pl-[2vw]">
-            <p
-              className="text-black/40 leading-[1.8] mb-6"
+        {/* WHAT / HOW flip + We Do stacked tight */}
+        <div className="flex flex-col gap-0">
+          <div className="relative" style={{ transformStyle: 'preserve-3d' }}>
+            <div
+              ref={whatRef}
+              className="italic text-black"
+              style={{ ...headlineStyle, fontWeight: 300, willChange: 'transform, opacity' }}
+            >
+              What
+            </div>
+            <div
+              ref={howRef}
+              className="absolute inset-0 italic"
               style={{
-                fontFamily: "var(--font-dm-sans), sans-serif",
-                fontSize: 'clamp(0.8rem, 0.9vw, 0.95rem)',
+                ...headlineStyle,
                 fontWeight: 300,
-                letterSpacing: '0.02em',
+                color: GOLD,
+                willChange: 'transform, opacity',
               }}
             >
-              Vision is nothing without execution. We build both.
-              We create campaigns, films, and the systems that get them made.
-            </p>
-            <a
-              href="#"
-              className="inline-block px-5 py-2.5 border border-black/80 text-black hover:bg-black hover:text-white transition-colors duration-300 uppercase"
-              style={{
-                fontFamily: "var(--font-dm-sans), sans-serif",
-                fontSize: 'clamp(0.5rem, 0.6vw, 0.65rem)',
-                letterSpacing: '0.35em',
-                fontWeight: 600,
-              }}
-            >
-              Our Services
-            </a>
+              How
+            </div>
           </div>
 
           <div
             className="italic text-black"
             style={{ ...headlineStyle, fontWeight: 300 }}
           >
-            We
+            We Do
           </div>
         </div>
 
-        <div
-          className="italic text-black"
-          style={{ ...headlineStyle, fontWeight: 300 }}
-        >
-          Do
+        {/* Description + CTA below the headline */}
+        <div className="mt-6 pl-[1vw] max-w-lg">
+          <p
+            className="text-black/40 leading-[1.8] mb-6"
+            style={{
+              fontFamily: "var(--font-dm-sans), sans-serif",
+              fontSize: 'clamp(0.8rem, 0.9vw, 0.95rem)',
+              fontWeight: 300,
+              letterSpacing: '0.02em',
+            }}
+          >
+            Vision is nothing without execution. We build both.
+            We create campaigns, films, and the systems that get them made.
+          </p>
+          <a
+            href="#"
+            className="inline-block px-5 py-2.5 border border-black/80 text-black hover:bg-black hover:text-white transition-colors duration-300 uppercase"
+            style={{
+              fontFamily: "var(--font-dm-sans), sans-serif",
+              fontSize: 'clamp(0.5rem, 0.6vw, 0.65rem)',
+              letterSpacing: '0.35em',
+              fontWeight: 600,
+            }}
+          >
+            Our Services
+          </a>
         </div>
       </div>
 
