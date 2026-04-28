@@ -38,6 +38,7 @@ export default function LogoRevealSection() {
       const offset = (gap + textWidth) / 2
 
       gsap.set(lockup, { xPercent: -50, yPercent: -50, x: offset })
+      gsap.set(logo, { scale: 0, opacity: 0 })
       gsap.set(text, { clipPath: 'inset(0 100% 0 0)' })
 
       const tl = gsap.timeline({
@@ -51,7 +52,7 @@ export default function LogoRevealSection() {
       })
 
       tl.to(logo, {
-        scale: 1.15, duration: 0.3, ease: 'power1.inOut', force3D: true,
+        scale: 1.15, opacity: 1, duration: 0.3, ease: 'power1.inOut', force3D: true,
       }, 0)
       tl.to(logo, {
         scale: 1, duration: 0.15, ease: 'power2.out', force3D: true,
@@ -109,7 +110,7 @@ export default function LogoRevealSection() {
           className="flex-shrink-0"
           style={{ willChange: 'transform' }}
         >
-          <div className="relative w-[28vh] h-[28vh]">
+          <div className="relative w-[36vh] h-[36vh]">
             <Image
               src="/NCH_logo_white.png"
               alt="Neelakar"
@@ -137,6 +138,17 @@ export default function LogoRevealSection() {
             style={{ fontFamily: BRAND_FONT, fontWeight: 200 }}
           >
             Creative House
+          </p>
+          <p
+            className="text-white/30 mt-3 whitespace-nowrap"
+            style={{
+              fontFamily: "'all-round-gothic', sans-serif",
+              fontSize: 'clamp(0.7rem, 1.2vw, 1.1rem)',
+              fontWeight: 300,
+              letterSpacing: '0.15em',
+            }}
+          >
+            Your vision, our form.
           </p>
         </div>
       </div>

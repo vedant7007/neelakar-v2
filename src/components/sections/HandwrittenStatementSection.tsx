@@ -6,10 +6,11 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger'
 
 gsap.registerPlugin(ScrollTrigger)
 
-const LINES = ['MOST OF OUR', 'CLIENT WORK', 'COMES FROM']
-const BG_COLOR = '#C7C7C7'
+const LINES = ['TRANSCEND']
+const BG_COLOR = '#060F0B'
 const HEADLINE = "var(--font-neel-display), 'Playfair Display', serif"
-const SCRIPT = "var(--font-neel-script), 'Cormorant Garamond', serif"
+const NUSRAT = "'Nusrat', cursive"
+const SANS = "var(--font-dm-sans), sans-serif"
 const RUST = '#C8A96E'
 
 export default function HandwrittenStatementSection() {
@@ -20,6 +21,7 @@ export default function HandwrittenStatementSection() {
   const handwrittenRef = useRef<HTMLSpanElement>(null)
   const penRef = useRef<HTMLDivElement>(null)
   const dotRef = useRef<HTMLDivElement>(null)
+  const subRef = useRef<HTMLDivElement>(null)
 
   useLayoutEffect(() => {
     const ctx = gsap.context(() => {
@@ -29,8 +31,9 @@ export default function HandwrittenStatementSection() {
       const lastLine = lastLineRef.current
       const handwritten = handwrittenRef.current
       const pen = penRef.current
+      const sub = subRef.current
       const lines = lineRefs.current.filter(Boolean) as HTMLDivElement[]
-      if (!container || !textBlock || !dot || !lastLine || !handwritten || !pen || lines.length === 0) return
+      if (!container || !textBlock || !dot || !lastLine || !handwritten || !pen || !sub || lines.length === 0) return
 
       gsap.set(textBlock, { x: '12vw' })
       gsap.set(lines, { clipPath: 'inset(0 100% 0 0)' })
@@ -38,6 +41,7 @@ export default function HandwrittenStatementSection() {
       gsap.set(handwritten, { clipPath: 'inset(0 100% 0 0)' })
       gsap.set(pen, { left: '0%', opacity: 0 })
       gsap.set(dot, { opacity: 0, scale: 0 })
+      gsap.set(sub, { opacity: 0, y: 20 })
 
       const tl = gsap.timeline({
         scrollTrigger: {
@@ -91,7 +95,14 @@ export default function HandwrittenStatementSection() {
         scale: 1,
         duration: 0.08,
         ease: 'back.out(3)',
-      }, 0.88)
+      }, 0.82)
+
+      tl.to(sub, {
+        opacity: 1,
+        y: 0,
+        duration: 0.12,
+        ease: 'power2.out',
+      }, 0.85)
     }, containerRef)
 
     return () => ctx.revert()
@@ -109,7 +120,7 @@ export default function HandwrittenStatementSection() {
         style={{ willChange: 'transform' }}
       >
         <div
-          className="text-neel-ink uppercase leading-[0.92]"
+          className="text-white uppercase leading-[0.92]"
           style={{
             fontFamily: HEADLINE,
             fontSize: 'clamp(3rem, 8.5vw, 9rem)',
@@ -132,7 +143,7 @@ export default function HandwrittenStatementSection() {
               ref={lastLineRef}
               style={{ willChange: 'clip-path' }}
             >
-              TRUSTED
+              THE
             </div>
 
             <div className="relative inline-block" style={{ marginLeft: '0.15em', paddingRight: '0.35em' }}>
@@ -140,7 +151,7 @@ export default function HandwrittenStatementSection() {
                 ref={handwrittenRef}
                 className="inline-block italic"
                 style={{
-                  fontFamily: SCRIPT,
+                  fontFamily: NUSRAT,
                   fontSize: '1.1em',
                   color: RUST,
                   fontWeight: 300,
@@ -149,7 +160,7 @@ export default function HandwrittenStatementSection() {
                   willChange: 'clip-path',
                 }}
               >
-                Referrals
+                Trend.
               </span>
 
               <div
@@ -180,6 +191,25 @@ export default function HandwrittenStatementSection() {
               />
             </div>
           </div>
+        </div>
+
+        <div
+          ref={subRef}
+          className="mt-8 max-w-2xl"
+          style={{ willChange: 'transform, opacity' }}
+        >
+          <p
+            className="text-white/35 leading-[1.9]"
+            style={{
+              fontFamily: SANS,
+              fontSize: 'clamp(0.85rem, 1vw, 1.05rem)',
+              fontWeight: 300,
+              letterSpacing: '0.02em',
+            }}
+          >
+            We distill the essence of your craft into imagery that defines
+            the Hyderabad luxury landscape.
+          </p>
         </div>
       </div>
     </div>

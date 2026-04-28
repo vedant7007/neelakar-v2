@@ -150,28 +150,28 @@ export default function ImageTextCollapseSection() {
           className="uppercase tracking-[0.5em] text-white/30 mb-6 block"
           style={{ fontFamily: SANS, fontSize: 'clamp(0.5rem, 0.65vw, 0.7rem)', fontWeight: 600 }}
         >
-          The Edit
+          For The Fashion Designer
         </span>
         <h2
           className="italic text-white leading-[1.05] mb-8"
           style={{ fontFamily: DISPLAY, fontSize: 'clamp(2.8rem, 5vw, 5.5rem)', fontWeight: 300 }}
         >
-          Editorial<br />&amp; Fashion
+          Your Runway<br />Is The World
         </h2>
         <div className="w-12 h-px bg-white/15 mb-8" />
         <p
           className="text-white/35 leading-[1.8] max-w-sm"
           style={{ fontFamily: SANS, fontSize: 'clamp(0.8rem, 0.9vw, 0.95rem)', fontWeight: 300, letterSpacing: '0.02em' }}
         >
-          We sculpt visual stories for haute couture and luxury brands,
-          where every frame breathes elegance and every detail is an act
-          of intention.
+          We build the visual intensity that commands attention, focusing on movement,
+          structure, and the raw texture of your textiles to ensure your collection
+          leaves an indelible mark on the industry.
         </p>
         <span
           className="uppercase tracking-[0.4em] text-white/15 mt-12 block"
           style={{ fontFamily: SANS, fontSize: 'clamp(0.5rem, 0.55vw, 0.6rem)', fontWeight: 500 }}
         >
-          Campaign &bull; Editorial &bull; Lookbook
+          Movement &bull; Structure &bull; Texture
         </span>
       </div>
 
@@ -186,28 +186,27 @@ export default function ImageTextCollapseSection() {
             className="uppercase tracking-[0.5em] text-white/30 mb-6 block"
             style={{ fontFamily: SANS, fontSize: 'clamp(0.5rem, 0.65vw, 0.7rem)', fontWeight: 600 }}
           >
-            The Craft
+            For The Jewellery Couturier
           </span>
           <h2
             className="italic text-white leading-[1.05] mb-8"
             style={{ fontFamily: DISPLAY, fontSize: 'clamp(2.8rem, 5vw, 5.5rem)', fontWeight: 300 }}
           >
-            Luxury<br />&amp; Jewellery
+            Life Within<br />The Stone
           </h2>
           <div className="w-12 h-px bg-white/15 mb-8 ml-auto" />
           <p
             className="text-white/35 leading-[1.8] max-w-sm ml-auto"
             style={{ fontFamily: SANS, fontSize: 'clamp(0.8rem, 0.9vw, 0.95rem)', fontWeight: 300, letterSpacing: '0.02em' }}
           >
-            From fine jewellery to prestige labels, we craft campaigns
-            that honour heritage and radiate the quiet confidence of
-            true luxury.
+            Our lens finds the unspoken dialogue between the piece and the wearer,
+            documenting the subtle complexity that defines your house.
           </p>
           <span
             className="uppercase tracking-[0.4em] text-white/15 mt-12 block"
             style={{ fontFamily: SANS, fontSize: 'clamp(0.5rem, 0.55vw, 0.6rem)', fontWeight: 500 }}
           >
-            Prestige &bull; Heritage &bull; Identity
+            Prestige &bull; Heritage &bull; Patina
           </span>
         </div>
       </div>
