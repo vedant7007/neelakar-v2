@@ -43,7 +43,7 @@ export default function HandwrittenStatementSection() {
         scrollTrigger: {
           trigger: container,
           start: 'top top',
-          end: '+=350vh',
+          end: '+=525vh',
           scrub: 3,
           pin: true,
         },

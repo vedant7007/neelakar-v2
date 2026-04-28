@@ -9,7 +9,7 @@ import LiquidEther from '@/components/LiquidEther'
 gsap.registerPlugin(ScrollTrigger)
 
 const BG_COLOR = '#060F0B'
-const BRAND_FONT = "var(--font-neel-display), 'Cormorant Garamond', serif"
+const BRAND_FONT = "'all-round-gothic', sans-serif"
 
 export default function LogoRevealSection() {
   const containerRef = useRef<HTMLDivElement>(null)
@@ -36,7 +36,7 @@ export default function LogoRevealSection() {
         scrollTrigger: {
           trigger: container,
           start: 'top top',
-          end: '+=300vh',
+          end: '+=450vh',
           scrub: 3,
           pin: true,
         },
@@ -118,14 +118,14 @@ export default function LogoRevealSection() {
           style={{ willChange: 'clip-path' }}
         >
           <h1
-            className="text-[clamp(3.5rem,10vw,8.5rem)] text-white/90 leading-[1] tracking-tight whitespace-nowrap italic"
-            style={{ fontFamily: BRAND_FONT, fontWeight: 300 }}
+            className="text-[clamp(3.5rem,10vw,8.5rem)] text-white/90 leading-[1] tracking-tight whitespace-nowrap"
+            style={{ fontFamily: BRAND_FONT, fontWeight: 200 }}
           >
             Neelakar
           </h1>
           <p
-            className="text-[clamp(2rem,5.5vw,4.5rem)] text-white/90 leading-[1] whitespace-nowrap italic"
-            style={{ fontFamily: BRAND_FONT, fontWeight: 300 }}
+            className="text-[clamp(2rem,5.5vw,4.5rem)] text-white/90 leading-[1] whitespace-nowrap"
+            style={{ fontFamily: BRAND_FONT, fontWeight: 200 }}
           >
             Creative House
           </p>

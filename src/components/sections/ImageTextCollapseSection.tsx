@@ -42,7 +42,7 @@ export default function ImageTextCollapseSection() {
         scrollTrigger: {
           trigger: container,
           start: 'top top',
-          end: '+=550vh',
+          end: '+=825vh',
           scrub: 3,
           pin: true,
         },

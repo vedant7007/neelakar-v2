@@ -43,7 +43,7 @@ export default function CampaignsSection() {
         scrollTrigger: {
           trigger: gallery,
           start: 'top top',
-          end: `+=${images.length * 150}vh`,
+          end: `+=${images.length * 225}vh`,
           scrub: 3,
           pin: true,
         },

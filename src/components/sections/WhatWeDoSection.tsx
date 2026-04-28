@@ -74,7 +74,7 @@ export default function WhatWeDoSection() {
         scrollTrigger: {
           trigger: section,
           start: 'top top',
-          end: `+=${(cards.length + 3) * 100}vh`,
+          end: `+=${(cards.length + 3) * 150}vh`,
           scrub: 3,
           pin: true,
         },
