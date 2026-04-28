@@ -20,21 +20,37 @@ const IMAGES = [
 ]
 
 export default function CampaignsSection() {
+  const wrapperRef = useRef<HTMLDivElement>(null)
   const titleRef = useRef<HTMLDivElement>(null)
   const galleryRef = useRef<HTMLDivElement>(null)
   const imageRefs = useRef<(HTMLDivElement | null)[]>([])
 
   useLayoutEffect(() => {
     const ctx = gsap.context(() => {
+      const wrapper = wrapperRef.current
+      const title = titleRef.current
       const gallery = galleryRef.current
       const images = imageRefs.current.filter(Boolean) as HTMLDivElement[]
-      if (!gallery || images.length === 0) return
+      if (!wrapper || !title || !gallery || images.length === 0) return
 
+      // Title fade-out on scroll
+      gsap.to(title, {
+        opacity: 0,
+        scale: 0.9,
+        scrollTrigger: {
+          trigger: title,
+          start: 'top top',
+          end: 'bottom top',
+          scrub: 2,
+        },
+      })
+
+      // Set initial states: first image visible, rest off-screen right and small
       images.forEach((img, i) => {
         if (i === 0) {
-          gsap.set(img, { scale: 1, borderRadius: '0px', opacity: 1 })
+          gsap.set(img, { xPercent: 0, scale: 1, borderRadius: '0px', opacity: 1 })
         } else {
-          gsap.set(img, { scale: 0.3, borderRadius: '24px', opacity: 0 })
+          gsap.set(img, { xPercent: 80, scale: 0.35, borderRadius: '20px', opacity: 1 })
         }
       })
 
@@ -42,7 +58,7 @@ export default function CampaignsSection() {
         scrollTrigger: {
           trigger: gallery,
           start: 'top top',
-          end: `+=${images.length * 250}vh`,
+          end: `+=${images.length * 300}vh`,
           scrub: 3,
           pin: true,
         },
@@ -53,37 +69,35 @@ export default function CampaignsSection() {
       images.forEach((_, i) => {
         if (i === 0) return
 
-        const start = (i - 0.3) * seg
+        const start = (i - 0.5) * seg
 
+        // Current image shrinks and exits left
         tl.to(images[i - 1], {
-          scale: 0.3,
-          borderRadius: '24px',
-          opacity: 0,
-          duration: seg * 0.5,
-          ease: 'power2.in',
+          xPercent: -80,
+          scale: 0.35,
+          borderRadius: '20px',
+          duration: seg * 0.7,
+          ease: 'power2.inOut',
           force3D: true,
         }, start)
 
-        tl.fromTo(images[i],
-          { scale: 0.3, borderRadius: '24px', opacity: 0 },
-          {
-            scale: 1,
-            borderRadius: '0px',
-            opacity: 1,
-            duration: seg * 0.5,
-            ease: 'power2.out',
-            force3D: true,
-          },
-          start + seg * 0.1,
-        )
+        // Next image enters from right small, expands to full
+        tl.to(images[i], {
+          xPercent: 0,
+          scale: 1,
+          borderRadius: '0px',
+          duration: seg * 0.7,
+          ease: 'power2.inOut',
+          force3D: true,
+        }, start)
       })
-    }, galleryRef)
+    }, wrapperRef)
 
     return () => ctx.revert()
   }, [])
 
   return (
-    <div className="relative z-[4]" style={{ backgroundColor: BG_COLOR }}>
+    <div ref={wrapperRef} className="relative z-[4]" style={{ backgroundColor: BG_COLOR }}>
       {/* ── Full-screen title ── */}
       <div
         ref={titleRef}
@@ -113,7 +127,7 @@ export default function CampaignsSection() {
         <div className="w-16 h-px bg-white/10 mt-8" />
       </div>
 
-      {/* ── Pinned gallery ── */}
+      {/* ── Pinned horizontal gallery ── */}
       <div
         ref={galleryRef}
         className="relative w-full h-screen overflow-hidden"
@@ -123,10 +137,10 @@ export default function CampaignsSection() {
           <div
             key={i}
             ref={(el) => { imageRefs.current[i] = el }}
-            className="absolute inset-0 flex items-center justify-center overflow-hidden"
+            className="absolute inset-0 overflow-hidden"
             style={{
-              willChange: 'transform, opacity, border-radius',
-              zIndex: i + 1,
+              willChange: 'transform, border-radius',
+              zIndex: IMAGES.length - i,
             }}
           >
             <Image
@@ -138,6 +152,19 @@ export default function CampaignsSection() {
             />
           </div>
         ))}
+
+        {/* Counter */}
+        <div
+          className="absolute bottom-8 right-8 z-50 text-white/30"
+          style={{
+            fontFamily: SANS,
+            fontSize: 'clamp(0.6rem, 0.7vw, 0.75rem)',
+            letterSpacing: '0.3em',
+            fontWeight: 500,
+          }}
+        >
+          {String(IMAGES.length).padStart(2, '0')} WORKS
+        </div>
       </div>
     </div>
   )
