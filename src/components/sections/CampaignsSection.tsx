@@ -8,6 +8,8 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger'
 gsap.registerPlugin(ScrollTrigger)
 
 const BG_COLOR = '#060F0B'
+const DISPLAY = "var(--font-neel-display), 'Playfair Display', serif"
+const SANS = "var(--font-dm-sans), sans-serif"
 
 const IMAGES = [
   'https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=1600&h=900&fit=crop',
@@ -18,6 +20,7 @@ const IMAGES = [
 ]
 
 export default function CampaignsSection() {
+  const titleRef = useRef<HTMLDivElement>(null)
   const galleryRef = useRef<HTMLDivElement>(null)
   const imageRefs = useRef<(HTMLDivElement | null)[]>([])
 
@@ -29,13 +32,9 @@ export default function CampaignsSection() {
 
       images.forEach((img, i) => {
         if (i === 0) {
-          gsap.set(img, { xPercent: 0, scale: 1, borderRadius: '0px' })
+          gsap.set(img, { scale: 1, borderRadius: '0px', opacity: 1 })
         } else {
-          gsap.set(img, {
-            xPercent: 100,
-            scale: 0.5,
-            borderRadius: '16px',
-          })
+          gsap.set(img, { scale: 0.3, borderRadius: '24px', opacity: 0 })
         }
       })
 
@@ -43,7 +42,7 @@ export default function CampaignsSection() {
         scrollTrigger: {
           trigger: gallery,
           start: 'top top',
-          end: `+=${images.length * 225}vh`,
+          end: `+=${images.length * 250}vh`,
           scrub: 3,
           pin: true,
         },
@@ -51,34 +50,33 @@ export default function CampaignsSection() {
 
       const seg = 1 / images.length
 
-      images.forEach((img, i) => {
+      images.forEach((_, i) => {
         if (i === 0) return
 
-        const start = (i - 0.15) * seg
-        const expandEnd = start + seg * 0.75
+        const start = (i - 0.3) * seg
 
         tl.to(images[i - 1], {
-          filter: 'blur(12px)',
-          scale: 1.05,
-          duration: seg * 0.6,
-          ease: 'power2.inOut',
+          scale: 0.3,
+          borderRadius: '24px',
+          opacity: 0,
+          duration: seg * 0.5,
+          ease: 'power2.in',
           force3D: true,
         }, start)
 
-        tl.fromTo(img,
-          { xPercent: 100, scale: 0.45, borderRadius: '20px' },
+        tl.fromTo(images[i],
+          { scale: 0.3, borderRadius: '24px', opacity: 0 },
           {
-            xPercent: 0,
             scale: 1,
             borderRadius: '0px',
-            duration: expandEnd - start,
-            ease: 'power3.out',
+            opacity: 1,
+            duration: seg * 0.5,
+            ease: 'power2.out',
             force3D: true,
           },
-          start,
+          start + seg * 0.1,
         )
       })
-
     }, galleryRef)
 
     return () => ctx.revert()
@@ -86,11 +84,15 @@ export default function CampaignsSection() {
 
   return (
     <div className="relative z-[4]" style={{ backgroundColor: BG_COLOR }}>
-      <div className="w-full pt-[10vh] pb-[6vh] px-[5vw]">
+      {/* ── Full-screen title ── */}
+      <div
+        ref={titleRef}
+        className="w-full h-screen flex flex-col items-center justify-center px-[5vw]"
+      >
         <span
-          className="block text-white/25 uppercase mb-4"
+          className="block text-white/25 uppercase mb-6"
           style={{
-            fontFamily: 'var(--font-dm-sans), sans-serif',
+            fontFamily: SANS,
             fontSize: 'clamp(0.5rem, 0.65vw, 0.7rem)',
             letterSpacing: '0.5em',
             fontWeight: 600,
@@ -99,17 +101,19 @@ export default function CampaignsSection() {
           Selected Works
         </span>
         <h2
-          className="text-white font-light italic leading-[0.95]"
+          className="text-white italic leading-[0.92] text-center"
           style={{
-            fontFamily: 'var(--font-neel-display), serif',
-            fontSize: 'clamp(3.5rem, 9vw, 9rem)',
+            fontFamily: DISPLAY,
+            fontSize: 'clamp(4rem, 12vw, 12rem)',
+            fontWeight: 300,
           }}
         >
-          Our Campaigns
+          Our<br />Campaigns
         </h2>
-        <div className="w-16 h-px bg-white/10 mt-6" />
+        <div className="w-16 h-px bg-white/10 mt-8" />
       </div>
 
+      {/* ── Pinned gallery ── */}
       <div
         ref={galleryRef}
         className="relative w-full h-screen overflow-hidden"
@@ -119,9 +123,9 @@ export default function CampaignsSection() {
           <div
             key={i}
             ref={(el) => { imageRefs.current[i] = el }}
-            className="absolute inset-0 overflow-hidden"
+            className="absolute inset-0 flex items-center justify-center overflow-hidden"
             style={{
-              willChange: 'transform, filter, border-radius',
+              willChange: 'transform, opacity, border-radius',
               zIndex: i + 1,
             }}
           >
@@ -134,7 +138,6 @@ export default function CampaignsSection() {
             />
           </div>
         ))}
-
       </div>
     </div>
   )
