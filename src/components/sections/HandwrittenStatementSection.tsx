@@ -21,7 +21,6 @@ export default function HandwrittenStatementSection() {
   const headlineRef = useRef<HTMLDivElement>(null)
   const feltRef = useRef<HTMLSpanElement>(null)
   const penRef = useRef<HTMLDivElement>(null)
-  const bodyRef = useRef<HTMLDivElement>(null)
 
   useLayoutEffect(() => {
     const ctx = gsap.context(() => {
@@ -31,15 +30,13 @@ export default function HandwrittenStatementSection() {
       const headline = headlineRef.current
       const felt = feltRef.current
       const pen = penRef.current
-      const body = bodyRef.current
-      if (!container || !label || !line || !headline || !felt || !pen || !body) return
+      if (!container || !label || !line || !headline || !felt || !pen) return
 
       gsap.set(line, { scaleX: 0, transformOrigin: 'left center' })
       gsap.set(label, { opacity: 0, y: 12 })
-      gsap.set(headline, { clipPath: 'inset(0 0 100% 0)' })
+      gsap.set(headline, { opacity: 0, y: 40 })
       gsap.set(felt, { clipPath: 'inset(0 100% 0 0)' })
       gsap.set(pen, { left: '0%', opacity: 0 })
-      gsap.set(body, { opacity: 0, y: 30 })
 
       const tl = gsap.timeline({
         scrollTrigger: {
@@ -51,31 +48,13 @@ export default function HandwrittenStatementSection() {
         },
       })
 
-      tl.to(line, { scaleX: 1, duration: 0.12, ease: 'power2.out' }, 0)
-      tl.to(label, { opacity: 1, y: 0, duration: 0.1, ease: 'power2.out' }, 0.08)
-      tl.to(headline, {
-        clipPath: 'inset(0 0 0% 0)',
-        duration: 0.25,
-        ease: 'power2.out',
-      }, 0.15)
-      tl.to(pen, { opacity: 1, duration: 0.02 }, 0.42)
-      tl.to(pen, {
-        left: '100%',
-        duration: 0.2,
-        ease: 'power1.inOut',
-      }, 0.42)
-      tl.to(felt, {
-        clipPath: 'inset(0 0% 0 0)',
-        duration: 0.2,
-        ease: 'power1.inOut',
-      }, 0.42)
-      tl.to(pen, { opacity: 0, duration: 0.02 }, 0.62)
-      tl.to(body, {
-        opacity: 1,
-        y: 0,
-        duration: 0.15,
-        ease: 'power2.out',
-      }, 0.65)
+      tl.to(line, { scaleX: 1, duration: 0.1, ease: 'power2.out' }, 0)
+      tl.to(label, { opacity: 1, y: 0, duration: 0.1, ease: 'power2.out' }, 0.06)
+      tl.to(headline, { opacity: 1, y: 0, duration: 0.2, ease: 'power2.out' }, 0.12)
+      tl.to(pen, { opacity: 1, duration: 0.02 }, 0.38)
+      tl.to(pen, { left: '100%', duration: 0.22, ease: 'power1.inOut' }, 0.38)
+      tl.to(felt, { clipPath: 'inset(0 0% 0 0)', duration: 0.22, ease: 'power1.inOut' }, 0.38)
+      tl.to(pen, { opacity: 0, duration: 0.02 }, 0.60)
     }, containerRef)
 
     return () => ctx.revert()
@@ -83,45 +62,36 @@ export default function HandwrittenStatementSection() {
 
   return (
     <>
-      {/* Dark → Light atmospheric gradient */}
+      {/* Dark → Light transition */}
       <div
         className="relative z-[2] w-full"
         style={{
           height: '60vh',
-          background: [
-            `radial-gradient(ellipse 140% 60% at 50% 85%, rgba(199,199,199,0.2) 0%, transparent 70%)`,
-            `linear-gradient(to bottom, ${BG_DARK} 0%, ${BG_DARK} 8%, #121612 18%, #222622 30%, #3e3e3e 44%, #5e5e5e 56%, #848484 68%, #a6a6a6 80%, #bbbcbb 90%, ${BG_LIGHT} 100%)`,
-          ].join(', '),
+          background: `linear-gradient(to bottom, ${BG_DARK} 0%, ${BG_DARK} 10%, #1a1a1a 25%, #3e3e3e 42%, #6a6a6a 58%, #969696 74%, #b4b4b4 88%, ${BG_LIGHT} 100%)`,
         }}
       />
 
-      {/* Pinned manifesto section */}
+      {/* Pinned manifesto */}
       <div
         ref={containerRef}
-        className="relative z-[2] w-screen h-screen flex items-center overflow-hidden"
-        style={{
-          background: `linear-gradient(to bottom, ${BG_LIGHT} 0%, ${BG_LIGHT} 85%, #b8b8b8 100%)`,
-        }}
+        className="relative z-[2] w-screen h-screen overflow-hidden"
+        style={{ backgroundColor: BG_LIGHT }}
       >
-        <div className="pl-[6vw] pr-[6vw] w-full">
-          <div className="mb-10">
+        <div className="absolute inset-0 flex flex-col justify-center pl-[6vw] pr-[6vw]">
+          <div className="mb-8">
             <div
               ref={lineRef}
-              className="w-16 h-px mb-4"
-              style={{
-                backgroundColor: INK,
-                opacity: 0.2,
-                willChange: 'transform',
-              }}
+              className="w-14 h-px mb-4"
+              style={{ backgroundColor: INK, opacity: 0.2, willChange: 'transform' }}
             />
             <div
               ref={labelRef}
               className="uppercase tracking-[0.5em]"
               style={{
                 fontFamily: SANS,
-                fontSize: 'clamp(0.55rem, 0.7vw, 0.75rem)',
+                fontSize: 'clamp(0.5rem, 0.65vw, 0.7rem)',
                 fontWeight: 600,
-                color: 'rgba(20,20,20,0.35)',
+                color: 'rgba(20,20,20,0.3)',
                 willChange: 'transform, opacity',
               }}
             >
@@ -131,23 +101,20 @@ export default function HandwrittenStatementSection() {
 
           <div
             ref={headlineRef}
-            className="leading-[1.12] mb-8"
             style={{
               fontFamily: HEADLINE,
-              fontSize: 'clamp(2rem, 5vw, 5rem)',
+              fontSize: 'clamp(2.4rem, 5.5vw, 5.5rem)',
               fontWeight: 300,
               fontStyle: 'italic',
               color: INK,
-              willChange: 'clip-path',
+              lineHeight: 1.15,
+              willChange: 'transform, opacity',
             }}
           >
             True fashion is not merely seen;
             <br />
             it is{' '}
-            <span
-              className="relative inline-block"
-              style={{ paddingRight: '0.15em' }}
-            >
+            <span className="relative inline-block" style={{ paddingRight: '0.15em' }}>
               <span
                 ref={feltRef}
                 className="inline-block"
@@ -177,41 +144,24 @@ export default function HandwrittenStatementSection() {
               />
             </span>
           </div>
-
-          <div
-            ref={bodyRef}
-            className="max-w-2xl"
-            style={{ willChange: 'transform, opacity' }}
-          >
-            <p
-              className="leading-[1.9]"
-              style={{
-                fontFamily: SANS,
-                fontSize: 'clamp(0.85rem, 1vw, 1.05rem)',
-                fontWeight: 300,
-                letterSpacing: '0.02em',
-                color: 'rgba(20,20,20,0.4)',
-              }}
-            >
-              At Neelakar, we understand the language of the craft, the tension
-              between texture and light, the deliberate weight of a garment, the
-              nuance of a metal&rsquo;s patina. We exist at the intersection of
-              creative intuition and technical mastery, partnering with designers
-              who refuse to compromise on their aesthetic integrity.
-            </p>
-          </div>
         </div>
+
+        {/* Bottom fade built into the section — no seam */}
+        <div
+          className="absolute bottom-0 left-0 right-0 pointer-events-none"
+          style={{
+            height: '35%',
+            background: `linear-gradient(to bottom, transparent 0%, #b8b8b8 100%)`,
+          }}
+        />
       </div>
 
-      {/* Light → Dark atmospheric gradient (off.site style) */}
+      {/* Light → Dark atmospheric gradient */}
       <div
         className="relative z-[2] w-full"
         style={{
           height: '80vh',
-          background: [
-            `radial-gradient(ellipse 160% 50% at 50% 10%, rgba(184,184,184,0.3) 0%, transparent 60%)`,
-            `linear-gradient(to bottom, #b8b8b8 0%, #a0a0a0 10%, #888888 22%, #686868 36%, #484848 50%, #2c2c2c 64%, #151a16 80%, ${BG_DARK} 100%)`,
-          ].join(', '),
+          background: `linear-gradient(to bottom, #b8b8b8 0%, #9a9a9a 12%, #787878 26%, #585858 40%, #3c3c3c 55%, #242424 72%, #121212 88%, ${BG_DARK} 100%)`,
         }}
       />
     </>
