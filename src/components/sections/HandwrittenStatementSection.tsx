@@ -6,169 +6,166 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger'
 
 gsap.registerPlugin(ScrollTrigger)
 
-const LINES = ['TRANSCEND']
-const BG_COLOR = '#060F0B'
+const BG_LIGHT = '#C7C7C7'
+const BG_DARK = '#060F0B'
 const HEADLINE = "var(--font-neel-display), 'Playfair Display', serif"
 const NUSRAT = "'Nusrat', cursive"
 const SANS = "var(--font-dm-sans), sans-serif"
+const INK = '#141414'
 const RUST = '#C8A96E'
 
 export default function HandwrittenStatementSection() {
   const containerRef = useRef<HTMLDivElement>(null)
-  const textBlockRef = useRef<HTMLDivElement>(null)
-  const lineRefs = useRef<(HTMLDivElement | null)[]>([])
-  const lastLineRef = useRef<HTMLDivElement>(null)
-  const handwrittenRef = useRef<HTMLSpanElement>(null)
+  const labelRef = useRef<HTMLDivElement>(null)
+  const lineRef = useRef<HTMLDivElement>(null)
+  const headlineRef = useRef<HTMLDivElement>(null)
+  const feltRef = useRef<HTMLSpanElement>(null)
   const penRef = useRef<HTMLDivElement>(null)
-  const dotRef = useRef<HTMLDivElement>(null)
-  const subRef = useRef<HTMLDivElement>(null)
+  const bodyRef = useRef<HTMLDivElement>(null)
 
   useLayoutEffect(() => {
     const ctx = gsap.context(() => {
       const container = containerRef.current
-      const textBlock = textBlockRef.current
-      const dot = dotRef.current
-      const lastLine = lastLineRef.current
-      const handwritten = handwrittenRef.current
+      const label = labelRef.current
+      const line = lineRef.current
+      const headline = headlineRef.current
+      const felt = feltRef.current
       const pen = penRef.current
-      const sub = subRef.current
-      const lines = lineRefs.current.filter(Boolean) as HTMLDivElement[]
-      if (!container || !textBlock || !dot || !lastLine || !handwritten || !pen || !sub || lines.length === 0) return
+      const body = bodyRef.current
+      if (!container || !label || !line || !headline || !felt || !pen || !body) return
 
-      gsap.set(textBlock, { x: '12vw' })
-      gsap.set(lines, { clipPath: 'inset(0 100% 0 0)' })
-      gsap.set(lastLine, { clipPath: 'inset(0 100% 0 0)' })
-      gsap.set(handwritten, { clipPath: 'inset(0 100% 0 0)' })
+      gsap.set(line, { scaleX: 0, transformOrigin: 'left center' })
+      gsap.set(label, { opacity: 0, y: 12 })
+      gsap.set(headline, { clipPath: 'inset(0 0 100% 0)' })
+      gsap.set(felt, { clipPath: 'inset(0 100% 0 0)' })
       gsap.set(pen, { left: '0%', opacity: 0 })
-      gsap.set(dot, { opacity: 0, scale: 0 })
-      gsap.set(sub, { opacity: 0, y: 20 })
+      gsap.set(body, { opacity: 0, y: 30 })
 
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: container,
           start: 'top top',
-          end: '+=525vh',
+          end: '+=400vh',
           scrub: 3,
           pin: true,
         },
       })
 
-      tl.to(textBlock, {
-        x: 0,
-        duration: 0.45,
+      tl.to(line, { scaleX: 1, duration: 0.12, ease: 'power2.out' }, 0)
+      tl.to(label, { opacity: 1, y: 0, duration: 0.1, ease: 'power2.out' }, 0.08)
+      tl.to(headline, {
+        clipPath: 'inset(0 0 0% 0)',
+        duration: 0.25,
         ease: 'power2.out',
-        force3D: true,
-      }, 0)
-
-      const lineInterval = 0.40 / (lines.length + 1)
-      lines.forEach((line, i) => {
-        tl.to(line, {
-          clipPath: 'inset(0 0% 0 0)',
-          duration: lineInterval * 0.85,
-          ease: 'power2.out',
-          force3D: true,
-        }, i * lineInterval)
-      })
-
-      tl.to(lastLine, {
-        clipPath: 'inset(0 0% 0 0)',
-        duration: lineInterval * 0.85,
-        ease: 'power2.out',
-        force3D: true,
-      }, lines.length * lineInterval)
-
-      tl.to(pen, { opacity: 1, duration: 0.02 }, 0.48)
+      }, 0.15)
+      tl.to(pen, { opacity: 1, duration: 0.02 }, 0.42)
       tl.to(pen, {
         left: '100%',
-        duration: 0.32,
+        duration: 0.2,
         ease: 'power1.inOut',
-      }, 0.48)
-      tl.to(handwritten, {
+      }, 0.42)
+      tl.to(felt, {
         clipPath: 'inset(0 0% 0 0)',
-        duration: 0.32,
+        duration: 0.2,
         ease: 'power1.inOut',
-      }, 0.48)
-      tl.to(pen, { opacity: 0, duration: 0.02 }, 0.80)
-
-      tl.to(dot, {
-        opacity: 1,
-        scale: 1,
-        duration: 0.08,
-        ease: 'back.out(3)',
-      }, 0.82)
-
-      tl.to(sub, {
+      }, 0.42)
+      tl.to(pen, { opacity: 0, duration: 0.02 }, 0.62)
+      tl.to(body, {
         opacity: 1,
         y: 0,
-        duration: 0.12,
+        duration: 0.15,
         ease: 'power2.out',
-      }, 0.85)
+      }, 0.65)
     }, containerRef)
 
     return () => ctx.revert()
   }, [])
 
   return (
-    <div
-      ref={containerRef}
-      className="relative z-[2] w-screen h-screen flex items-center overflow-hidden"
-      style={{ backgroundColor: BG_COLOR }}
-    >
+    <>
+      {/* Dark → Light atmospheric gradient */}
       <div
-        ref={textBlockRef}
-        className="pl-[4vw] pr-[4vw] w-full"
-        style={{ willChange: 'transform' }}
+        className="relative z-[2] w-full"
+        style={{
+          height: '55vh',
+          background: [
+            `radial-gradient(ellipse 140% 60% at 50% 90%, rgba(199,199,199,0.25) 0%, transparent 70%)`,
+            `linear-gradient(to bottom, ${BG_DARK} 0%, #0d1a14 12%, #1c2a24 25%, #3a4a42 40%, #687068 55%, #9a9e9a 72%, #b4b6b4 85%, ${BG_LIGHT} 100%)`,
+          ].join(', '),
+        }}
+      />
+
+      {/* Pinned manifesto section */}
+      <div
+        ref={containerRef}
+        className="relative z-[2] w-screen h-screen flex items-end overflow-hidden"
+        style={{ backgroundColor: BG_LIGHT }}
       >
-        <div
-          className="text-white uppercase leading-[0.92]"
-          style={{
-            fontFamily: HEADLINE,
-            fontSize: 'clamp(3rem, 8.5vw, 9rem)',
-            fontWeight: 900,
-          }}
-        >
-          {LINES.map((line, i) => (
+        <div className="pl-[6vw] pr-[6vw] pb-[10vh] w-full">
+          <div className="mb-10">
             <div
-              key={line}
-              ref={(el) => { lineRefs.current[i] = el }}
-              className="block"
-              style={{ willChange: 'clip-path' }}
-            >
-              {line}
-            </div>
-          ))}
-
-          <div className="flex items-baseline flex-wrap">
+              ref={lineRef}
+              className="w-16 h-px mb-4"
+              style={{
+                backgroundColor: INK,
+                opacity: 0.2,
+                willChange: 'transform',
+              }}
+            />
             <div
-              ref={lastLineRef}
-              style={{ willChange: 'clip-path' }}
+              ref={labelRef}
+              className="uppercase tracking-[0.5em]"
+              style={{
+                fontFamily: SANS,
+                fontSize: 'clamp(0.55rem, 0.7vw, 0.75rem)',
+                fontWeight: 600,
+                color: 'rgba(20,20,20,0.35)',
+                willChange: 'transform, opacity',
+              }}
             >
-              THE
+              Our Manifesto
             </div>
+          </div>
 
-            <div className="relative inline-block" style={{ marginLeft: '0.15em', paddingRight: '0.35em' }}>
+          <div
+            ref={headlineRef}
+            className="leading-[1.12] mb-8"
+            style={{
+              fontFamily: HEADLINE,
+              fontSize: 'clamp(2rem, 5vw, 5rem)',
+              fontWeight: 300,
+              fontStyle: 'italic',
+              color: INK,
+              willChange: 'clip-path',
+            }}
+          >
+            True fashion is not merely seen;
+            <br />
+            it is{' '}
+            <span
+              className="relative inline-block"
+              style={{ paddingRight: '0.15em' }}
+            >
               <span
-                ref={handwrittenRef}
-                className="inline-block italic"
+                ref={feltRef}
+                className="inline-block"
                 style={{
                   fontFamily: NUSRAT,
-                  fontSize: '1.1em',
+                  fontSize: '1.15em',
                   color: RUST,
-                  fontWeight: 300,
-                  textTransform: 'none',
-                  lineHeight: 1,
+                  fontWeight: 400,
+                  fontStyle: 'normal',
                   willChange: 'clip-path',
                 }}
               >
-                Trend.
+                felt.
               </span>
-
               <div
                 ref={penRef}
                 className="absolute"
                 style={{
-                  top: '5%',
-                  height: '90%',
+                  top: '10%',
+                  height: '80%',
                   width: '2px',
                   backgroundColor: RUST,
                   borderRadius: '1px',
@@ -176,42 +173,45 @@ export default function HandwrittenStatementSection() {
                   filter: `drop-shadow(0 0 4px ${RUST})`,
                 }}
               />
+            </span>
+          </div>
 
-              <div
-                ref={dotRef}
-                className="absolute rounded-full"
-                style={{
-                  backgroundColor: RUST,
-                  width: '0.12em',
-                  height: '0.12em',
-                  bottom: '0.1em',
-                  right: '-0.25em',
-                  willChange: 'transform, opacity',
-                }}
-              />
-            </div>
+          <div
+            ref={bodyRef}
+            className="max-w-2xl"
+            style={{ willChange: 'transform, opacity' }}
+          >
+            <p
+              className="leading-[1.9]"
+              style={{
+                fontFamily: SANS,
+                fontSize: 'clamp(0.85rem, 1vw, 1.05rem)',
+                fontWeight: 300,
+                letterSpacing: '0.02em',
+                color: 'rgba(20,20,20,0.4)',
+              }}
+            >
+              At Neelakar, we understand the language of the craft, the tension
+              between texture and light, the deliberate weight of a garment, the
+              nuance of a metal&rsquo;s patina. We exist at the intersection of
+              creative intuition and technical mastery, partnering with designers
+              who refuse to compromise on their aesthetic integrity.
+            </p>
           </div>
         </div>
-
-        <div
-          ref={subRef}
-          className="mt-8 max-w-2xl"
-          style={{ willChange: 'transform, opacity' }}
-        >
-          <p
-            className="text-white/35 leading-[1.9]"
-            style={{
-              fontFamily: SANS,
-              fontSize: 'clamp(0.85rem, 1vw, 1.05rem)',
-              fontWeight: 300,
-              letterSpacing: '0.02em',
-            }}
-          >
-            We distill the essence of your craft into imagery that defines
-            the Hyderabad luxury landscape.
-          </p>
-        </div>
       </div>
-    </div>
+
+      {/* Light → Dark atmospheric gradient (off.site style) */}
+      <div
+        className="relative z-[2] w-full"
+        style={{
+          height: '80vh',
+          background: [
+            `radial-gradient(ellipse 160% 50% at 50% 15%, rgba(199,199,199,0.35) 0%, transparent 65%)`,
+            `linear-gradient(to bottom, ${BG_LIGHT} 0%, #b8bab8 10%, #9a9e9a 22%, #707470 36%, #484c48 50%, #2a302c 64%, #141a16 80%, ${BG_DARK} 100%)`,
+          ].join(', '),
+        }}
+      />
+    </>
   )
 }
