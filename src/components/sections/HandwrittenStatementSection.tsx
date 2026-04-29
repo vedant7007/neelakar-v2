@@ -87,10 +87,10 @@ export default function HandwrittenStatementSection() {
       <div
         className="relative z-[2] w-full"
         style={{
-          height: '55vh',
+          height: '60vh',
           background: [
-            `radial-gradient(ellipse 140% 60% at 50% 90%, rgba(199,199,199,0.25) 0%, transparent 70%)`,
-            `linear-gradient(to bottom, ${BG_DARK} 0%, #0d1a14 12%, #1c2a24 25%, #3a4a42 40%, #687068 55%, #9a9e9a 72%, #b4b6b4 85%, ${BG_LIGHT} 100%)`,
+            `radial-gradient(ellipse 140% 60% at 50% 85%, rgba(199,199,199,0.2) 0%, transparent 70%)`,
+            `linear-gradient(to bottom, ${BG_DARK} 0%, ${BG_DARK} 8%, #121612 18%, #222622 30%, #3e3e3e 44%, #5e5e5e 56%, #848484 68%, #a6a6a6 80%, #bbbcbb 90%, ${BG_LIGHT} 100%)`,
           ].join(', '),
         }}
       />
