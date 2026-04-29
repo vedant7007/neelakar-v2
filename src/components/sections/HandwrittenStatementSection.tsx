@@ -98,10 +98,12 @@ export default function HandwrittenStatementSection() {
       {/* Pinned manifesto section */}
       <div
         ref={containerRef}
-        className="relative z-[2] w-screen h-screen flex items-end overflow-hidden"
-        style={{ backgroundColor: BG_LIGHT }}
+        className="relative z-[2] w-screen h-screen flex items-center overflow-hidden"
+        style={{
+          background: `linear-gradient(to bottom, ${BG_LIGHT} 0%, ${BG_LIGHT} 85%, #b8b8b8 100%)`,
+        }}
       >
-        <div className="pl-[6vw] pr-[6vw] pb-[10vh] w-full">
+        <div className="pl-[6vw] pr-[6vw] w-full">
           <div className="mb-10">
             <div
               ref={lineRef}
@@ -207,8 +209,8 @@ export default function HandwrittenStatementSection() {
         style={{
           height: '80vh',
           background: [
-            `radial-gradient(ellipse 160% 50% at 50% 15%, rgba(199,199,199,0.35) 0%, transparent 65%)`,
-            `linear-gradient(to bottom, ${BG_LIGHT} 0%, #b8bab8 10%, #9a9e9a 22%, #707470 36%, #484c48 50%, #2a302c 64%, #141a16 80%, ${BG_DARK} 100%)`,
+            `radial-gradient(ellipse 160% 50% at 50% 10%, rgba(184,184,184,0.3) 0%, transparent 60%)`,
+            `linear-gradient(to bottom, #b8b8b8 0%, #a0a0a0 10%, #888888 22%, #686868 36%, #484848 50%, #2c2c2c 64%, #151a16 80%, ${BG_DARK} 100%)`,
           ].join(', '),
         }}
       />
