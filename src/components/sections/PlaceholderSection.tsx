@@ -122,6 +122,7 @@ function DustText({ text, className, style }: { text: string; className?: string
       <span
         className="relative z-0 transition-all duration-500"
         style={{
+          ...style,
           filter: isHovered ? 'blur(1.5px)' : 'none',
           opacity: isHovered ? 0.6 : 1,
         }}
@@ -142,14 +143,12 @@ export default function PlaceholderSection() {
         <DustText
           text="Neelakar"
           className="text-white leading-[1] tracking-tight block"
+          style={{
+            fontFamily: BRAND_FONT,
+            fontWeight: 700,
+            fontSize: 'clamp(5rem, 14vw, 14rem)',
+          }}
         />
-        <style jsx>{`
-          .relative :global(span) {
-            font-family: ${BRAND_FONT};
-            font-weight: 700;
-            font-size: clamp(5rem, 14vw, 14rem);
-          }
-        `}</style>
 
         <p
           className="text-white/20 mt-4 uppercase"
