@@ -6,8 +6,8 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger'
 
 gsap.registerPlugin(ScrollTrigger)
 
-const BG_LIGHT = '#C7C7C7'
 const BG_DARK = '#060F0B'
+const BG_LIGHT = '#C7C7C7'
 const HEADLINE = "var(--font-neel-display), 'Playfair Display', serif"
 const NUSRAT = "'Nusrat', cursive"
 const SANS = "var(--font-dm-sans), sans-serif"
@@ -61,109 +61,81 @@ export default function HandwrittenStatementSection() {
   }, [])
 
   return (
-    <>
-      {/* Dark → Light transition */}
-      <div
-        className="relative z-[2] w-full"
-        style={{
-          height: '60vh',
-          background: `linear-gradient(to bottom, ${BG_DARK} 0%, ${BG_DARK} 10%, #1a1a1a 25%, #3e3e3e 42%, #6a6a6a 58%, #969696 74%, #b4b4b4 88%, ${BG_LIGHT} 100%)`,
-        }}
-      />
-
-      {/* Pinned manifesto */}
-      <div
-        ref={containerRef}
-        className="relative z-[2] w-screen h-screen overflow-hidden"
-        style={{ backgroundColor: BG_LIGHT }}
-      >
-        <div className="absolute inset-0 flex flex-col justify-center pl-[6vw] pr-[6vw]">
-          <div className="mb-8">
-            <div
-              ref={lineRef}
-              className="w-14 h-px mb-4"
-              style={{ backgroundColor: INK, opacity: 0.2, willChange: 'transform' }}
-            />
-            <div
-              ref={labelRef}
-              className="uppercase tracking-[0.5em]"
-              style={{
-                fontFamily: SANS,
-                fontSize: 'clamp(0.5rem, 0.65vw, 0.7rem)',
-                fontWeight: 600,
-                color: 'rgba(20,20,20,0.3)',
-                willChange: 'transform, opacity',
-              }}
-            >
-              Our Manifesto
-            </div>
-          </div>
-
+    <div
+      ref={containerRef}
+      className="relative z-[2] w-screen h-screen overflow-hidden"
+      style={{
+        background: `linear-gradient(to bottom, ${BG_DARK} 0%, ${BG_DARK} 5%, #1a1a1a 12%, #3a3a3a 20%, #6a6a6a 28%, #999999 36%, ${BG_LIGHT} 44%, ${BG_LIGHT} 56%, #999999 64%, #6a6a6a 72%, #3a3a3a 80%, #1a1a1a 88%, ${BG_DARK} 95%, ${BG_DARK} 100%)`,
+      }}
+    >
+      <div className="absolute inset-0 flex flex-col justify-center pl-[6vw] pr-[6vw]">
+        <div className="mb-8">
           <div
-            ref={headlineRef}
+            ref={lineRef}
+            className="w-14 h-px mb-4"
+            style={{ backgroundColor: INK, opacity: 0.2, willChange: 'transform' }}
+          />
+          <div
+            ref={labelRef}
+            className="uppercase tracking-[0.5em]"
             style={{
-              fontFamily: HEADLINE,
-              fontSize: 'clamp(2.4rem, 5.5vw, 5.5rem)',
-              fontWeight: 300,
-              fontStyle: 'italic',
-              color: INK,
-              lineHeight: 1.15,
+              fontFamily: SANS,
+              fontSize: 'clamp(0.5rem, 0.65vw, 0.7rem)',
+              fontWeight: 600,
+              color: 'rgba(20,20,20,0.3)',
               willChange: 'transform, opacity',
             }}
           >
-            True fashion is not merely seen;
-            <br />
-            it is{' '}
-            <span className="relative inline-block" style={{ paddingRight: '0.15em' }}>
-              <span
-                ref={feltRef}
-                className="inline-block"
-                style={{
-                  fontFamily: NUSRAT,
-                  fontSize: '1.15em',
-                  color: RUST,
-                  fontWeight: 400,
-                  fontStyle: 'normal',
-                  willChange: 'clip-path',
-                }}
-              >
-                felt.
-              </span>
-              <div
-                ref={penRef}
-                className="absolute"
-                style={{
-                  top: '10%',
-                  height: '80%',
-                  width: '2px',
-                  backgroundColor: RUST,
-                  borderRadius: '1px',
-                  willChange: 'left, opacity',
-                  filter: `drop-shadow(0 0 4px ${RUST})`,
-                }}
-              />
-            </span>
+            Our Manifesto
           </div>
         </div>
 
-        {/* Bottom fade built into the section — no seam */}
         <div
-          className="absolute bottom-0 left-0 right-0 pointer-events-none"
+          ref={headlineRef}
           style={{
-            height: '35%',
-            background: `linear-gradient(to bottom, transparent 0%, #b8b8b8 100%)`,
+            fontFamily: HEADLINE,
+            fontSize: 'clamp(2.4rem, 5.5vw, 5.5rem)',
+            fontWeight: 300,
+            fontStyle: 'italic',
+            color: INK,
+            lineHeight: 1.15,
+            willChange: 'transform, opacity',
           }}
-        />
+        >
+          True fashion is not merely seen;
+          <br />
+          it is{' '}
+          <span className="relative inline-block" style={{ paddingRight: '0.15em' }}>
+            <span
+              ref={feltRef}
+              className="inline-block"
+              style={{
+                fontFamily: NUSRAT,
+                fontSize: '1.15em',
+                color: RUST,
+                fontWeight: 400,
+                fontStyle: 'normal',
+                willChange: 'clip-path',
+              }}
+            >
+              felt.
+            </span>
+            <div
+              ref={penRef}
+              className="absolute"
+              style={{
+                top: '10%',
+                height: '80%',
+                width: '2px',
+                backgroundColor: RUST,
+                borderRadius: '1px',
+                willChange: 'left, opacity',
+                filter: `drop-shadow(0 0 4px ${RUST})`,
+              }}
+            />
+          </span>
+        </div>
       </div>
-
-      {/* Light → Dark atmospheric gradient */}
-      <div
-        className="relative z-[2] w-full"
-        style={{
-          height: '80vh',
-          background: `linear-gradient(to bottom, #b8b8b8 0%, #9a9a9a 12%, #787878 26%, #585858 40%, #3c3c3c 55%, #242424 72%, #121212 88%, ${BG_DARK} 100%)`,
-        }}
-      />
-    </>
+    </div>
   )
 }
