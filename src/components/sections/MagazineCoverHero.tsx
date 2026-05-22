@@ -72,7 +72,7 @@ export default function MagazineCoverHero() {
 
   const shuffleBaseStyle = {
     fontFamily: DISPLAY,
-    fontSize: 'clamp(1rem, 1.3vw, 1.4rem)',
+    fontSize: 'clamp(1.2rem, 1.6vw, 1.7rem)',
     fontWeight: 700,
     lineHeight: 1.2,
     letterSpacing: '0.04em',
@@ -85,21 +85,16 @@ export default function MagazineCoverHero() {
       style={{ backgroundColor: BG }}
     >
       {!isMobile && (
-        <div className="absolute inset-0 z-[1] pointer-events-auto opacity-40">
+        <div className="absolute inset-0 z-[1] pointer-events-auto opacity-70">
           <LiquidEther
             colors={[...ETHER_COLORS]}
-            mouseForce={6}
-            cursorSize={90}
-            resolution={0.4}
-            iterationsPoisson={12}
-            iterationsViscous={12}
+            mouseForce={12}
+            cursorSize={140}
+            resolution={0.5}
+            iterationsPoisson={18}
+            iterationsViscous={18}
             isBounce
-            autoDemo
-            autoSpeed={0.25}
-            autoIntensity={1.2}
-            takeoverDuration={0.4}
-            autoResumeDelay={2000}
-            autoRampDuration={1.2}
+            takeoverDuration={0.3}
           />
         </div>
       )}
@@ -109,10 +104,10 @@ export default function MagazineCoverHero() {
         className="absolute inset-x-0 z-[2] text-center pointer-events-none select-none"
         style={{
           fontFamily: DISPLAY,
-          fontSize: 'clamp(3.5rem, 9vw, 11rem)',
+          fontSize: 'clamp(4.5rem, 12vw, 14rem)',
           fontWeight: 900,
           lineHeight: 0.85,
-          letterSpacing: '0.06em',
+          letterSpacing: '0.04em',
           color: TITLE_RED,
           top: '2vh',
           willChange: 'transform, opacity',
@@ -172,12 +167,12 @@ export default function MagazineCoverHero() {
             textAlign="left"
             shuffleDirection="up"
             animationMode="random"
-            maxDelay={4}
-            duration={1.4}
-            ease="sine.inOut"
-            shuffleTimes={1}
+            maxDelay={2.5}
+            duration={0.6}
+            ease="power2.out"
+            shuffleTimes={2}
             loop
-            loopDelay={8}
+            loopDelay={6}
             triggerOnce={false}
             triggerOnHover={false}
             rootMargin="0px"
@@ -203,12 +198,12 @@ export default function MagazineCoverHero() {
             textAlign="left"
             shuffleDirection="up"
             animationMode="random"
-            maxDelay={4.5}
-            duration={1.4}
-            ease="sine.inOut"
-            shuffleTimes={1}
+            maxDelay={3}
+            duration={0.6}
+            ease="power2.out"
+            shuffleTimes={2}
             loop
-            loopDelay={9}
+            loopDelay={7}
             triggerOnce={false}
             triggerOnHover={false}
             rootMargin="0px"
@@ -234,16 +229,16 @@ export default function MagazineCoverHero() {
             textAlign="right"
             shuffleDirection="up"
             animationMode="random"
-            maxDelay={3.5}
-            duration={1.4}
-            ease="sine.inOut"
-            shuffleTimes={1}
+            maxDelay={2.5}
+            duration={0.6}
+            ease="power2.out"
+            shuffleTimes={2}
             loop
-            loopDelay={7}
+            loopDelay={6.5}
             triggerOnce={false}
             triggerOnHover={false}
             rootMargin="0px"
-            style={{ ...shuffleBaseStyle, fontSize: 'clamp(1.3rem, 1.8vw, 1.9rem)', color: GOLD }}
+            style={{ ...shuffleBaseStyle, color: GOLD }}
             className="font-[inherit] !leading-[1.2]"
           />
         </div>
@@ -265,12 +260,12 @@ export default function MagazineCoverHero() {
             textAlign="right"
             shuffleDirection="up"
             animationMode="random"
-            maxDelay={4.2}
-            duration={1.4}
-            ease="sine.inOut"
-            shuffleTimes={1}
+            maxDelay={2.8}
+            duration={0.6}
+            ease="power2.out"
+            shuffleTimes={2}
             loop
-            loopDelay={8.5}
+            loopDelay={7}
             triggerOnce={false}
             triggerOnHover={false}
             rootMargin="0px"
