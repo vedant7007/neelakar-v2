@@ -7,80 +7,64 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger'
 
 gsap.registerPlugin(ScrollTrigger)
 
-const BG_COLOR = '#060F0B'
-const DISPLAY = "var(--font-neel-display), 'Cormorant Garamond', serif"
-const SANS = "var(--font-dm-sans), sans-serif"
+const BG = '#060F0B'
+const DISPLAY = "var(--font-neel-display), 'Playfair Display', serif"
+const SANS = "var(--font-dm-sans), 'DM Sans', sans-serif"
+const GOLD = '#C8A96E'
+const NUSRAT = "'Nusrat', cursive"
 
 export default function ImageTextCollapseSection() {
   const containerRef = useRef<HTMLDivElement>(null)
-  const img1Ref = useRef<HTMLDivElement>(null)
-  const txt1Ref = useRef<HTMLDivElement>(null)
-  const img2Ref = useRef<HTMLDivElement>(null)
-  const txt2Ref = useRef<HTMLDivElement>(null)
-  const wipeLeftRef = useRef<HTMLDivElement>(null)
-  const wipeRightRef = useRef<HTMLDivElement>(null)
+  const pair1Ref = useRef<HTMLDivElement>(null)
+  const pair2Ref = useRef<HTMLDivElement>(null)
 
   useLayoutEffect(() => {
     const ctx = gsap.context(() => {
       const container = containerRef.current
-      const img1 = img1Ref.current
-      const txt1 = txt1Ref.current
-      const img2 = img2Ref.current
-      const txt2 = txt2Ref.current
-      const wipeL = wipeLeftRef.current
-      const wipeR = wipeRightRef.current
-      if (!container || !img1 || !txt1 || !img2 || !txt2 || !wipeL || !wipeR) return
+      const pair1 = pair1Ref.current
+      const pair2 = pair2Ref.current
+      if (!container || !pair1 || !pair2) return
 
-      gsap.set(img1, { clipPath: 'inset(0% 100% 0% 0%)' })
-      gsap.set(txt1, { clipPath: 'inset(0% 0% 0% 100%)' })
-      gsap.set(txt2, { clipPath: 'inset(0% 0% 0% 100%)' })
-      gsap.set(img2, { clipPath: 'inset(0% 100% 0% 0%)' })
-      gsap.set(wipeL, { left: '0%', opacity: 0 })
-      gsap.set(wipeR, { left: '100%', opacity: 0 })
+      gsap.set(pair1, { clipPath: 'inset(0 50% 0 50%)' })
+      gsap.set(pair2, { clipPath: 'inset(0 50% 0 50%)', visibility: 'hidden' })
 
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: container,
           start: 'top top',
-          end: '+=825vh',
-          scrub: 3,
+          end: '+=700vh',
+          scrub: 2,
           pin: true,
         },
       })
 
-      tl.to([wipeL, wipeR], { opacity: 1, duration: 0.01 }, 0.05)
-      tl.to(wipeL, { left: '50%', duration: 0.14, ease: 'power2.inOut' }, 0.05)
-      tl.to(img1, { clipPath: 'inset(0% 0% 0% 0%)', duration: 0.14, ease: 'power2.inOut' }, 0.05)
-      tl.to(wipeR, { left: '50%', duration: 0.14, ease: 'power2.inOut' }, 0.05)
-      tl.to(txt1, { clipPath: 'inset(0% 0% 0% 0%)', duration: 0.14, ease: 'power2.inOut' }, 0.05)
-      tl.to([wipeL, wipeR], { opacity: 0, duration: 0.02 }, 0.19)
+      tl.to(pair1, {
+        clipPath: 'inset(0 0% 0 0%)',
+        duration: 0.18,
+        ease: 'power3.inOut',
+      }, 0.02)
 
-      tl.set(wipeL, { left: '0%' }, 0.34)
-      tl.set(wipeR, { left: '100%' }, 0.34)
-      tl.to([wipeL, wipeR], { opacity: 1, duration: 0.01 }, 0.34)
-      tl.to(wipeL, { left: '50%', duration: 0.14, ease: 'power2.inOut' }, 0.34)
-      tl.to(img1, { clipPath: 'inset(0% 0% 0% 100%)', duration: 0.14, ease: 'power2.inOut' }, 0.34)
-      tl.to(wipeR, { left: '50%', duration: 0.14, ease: 'power2.inOut' }, 0.34)
-      tl.to(txt1, { clipPath: 'inset(0% 100% 0% 0%)', duration: 0.14, ease: 'power2.inOut' }, 0.34)
-      tl.to([wipeL, wipeR], { opacity: 0, duration: 0.02 }, 0.48)
+      tl.to(pair1, {
+        clipPath: 'inset(0 50% 0 50%)',
+        duration: 0.16,
+        ease: 'power3.inOut',
+      }, 0.38)
 
-      tl.set(wipeL, { left: '50%' }, 0.52)
-      tl.set(wipeR, { left: '50%' }, 0.52)
-      tl.to([wipeL, wipeR], { opacity: 1, duration: 0.01 }, 0.52)
-      tl.to(wipeL, { left: '0%', duration: 0.14, ease: 'power2.inOut' }, 0.52)
-      tl.to(txt2, { clipPath: 'inset(0% 0% 0% 0%)', duration: 0.14, ease: 'power2.inOut' }, 0.52)
-      tl.to(wipeR, { left: '100%', duration: 0.14, ease: 'power2.inOut' }, 0.52)
-      tl.to(img2, { clipPath: 'inset(0% 0% 0% 0%)', duration: 0.14, ease: 'power2.inOut' }, 0.52)
-      tl.to([wipeL, wipeR], { opacity: 0, duration: 0.02 }, 0.66)
+      tl.set(pair1, { visibility: 'hidden' }, 0.54)
+      tl.set(pair2, { visibility: 'visible' }, 0.54)
 
-      tl.set(wipeL, { left: '0%' }, 0.78)
-      tl.set(wipeR, { left: '100%' }, 0.78)
-      tl.to([wipeL, wipeR], { opacity: 1, duration: 0.01 }, 0.78)
-      tl.to(wipeL, { left: '50%', duration: 0.14, ease: 'power2.inOut' }, 0.78)
-      tl.to(txt2, { clipPath: 'inset(0% 0% 0% 100%)', duration: 0.14, ease: 'power2.inOut' }, 0.78)
-      tl.to(wipeR, { left: '50%', duration: 0.14, ease: 'power2.inOut' }, 0.78)
-      tl.to(img2, { clipPath: 'inset(0% 100% 0% 0%)', duration: 0.14, ease: 'power2.inOut' }, 0.78)
-      tl.to([wipeL, wipeR], { opacity: 0, duration: 0.02 }, 0.92)
+      tl.to(pair2, {
+        clipPath: 'inset(0 0% 0 0%)',
+        duration: 0.18,
+        ease: 'power3.inOut',
+      }, 0.56)
+
+      tl.to(pair2, {
+        clipPath: 'inset(0 50% 0 50%)',
+        duration: 0.16,
+        ease: 'power3.inOut',
+      }, 0.82)
+
     }, containerRef)
 
     return () => ctx.revert()
@@ -90,154 +74,145 @@ export default function ImageTextCollapseSection() {
     <div
       ref={containerRef}
       className="relative z-[3] w-full h-screen overflow-hidden"
-      style={{ backgroundColor: BG_COLOR }}
+      style={{ backgroundColor: BG }}
     >
-      <div
-        ref={wipeLeftRef}
-        className="absolute top-0 h-full w-px z-10"
-        style={{
-          backgroundColor: 'rgba(255,255,255,0.12)',
-          willChange: 'left, opacity',
-        }}
-      />
-      <div
-        ref={wipeRightRef}
-        className="absolute top-0 h-full w-px z-10"
-        style={{
-          backgroundColor: 'rgba(255,255,255,0.12)',
-          willChange: 'left, opacity',
-          transform: 'translateX(-1px)',
-        }}
-      />
-
-      {/* ── Pair 1: Image left, text right ── */}
-      <div
-        ref={img1Ref}
-        className="absolute left-0 top-0 w-1/2 h-full overflow-hidden"
-        style={{ willChange: 'clip-path' }}
-      >
-        <Image
-          src="https://images.unsplash.com/photo-1558171813-4c088753af8f?w=1000&h=1400&fit=crop"
-          alt="Editorial & Fashion"
-          fill
-          className="object-cover"
-          sizes="50vw"
-        />
-        <div className="absolute bottom-[8%] left-[6%] z-10">
-          <span
-            className="uppercase tracking-[0.4em] text-white/40"
-            style={{ fontFamily: SANS, fontSize: 'clamp(0.55rem, 0.7vw, 0.75rem)', fontWeight: 500 }}
-          >
-            Vol. I — Spring 2026
-          </span>
+      {/* ═══ Pair 1: Fashion — image LEFT, text panel RIGHT, headline overlaps onto image ═══ */}
+      <div ref={pair1Ref} className="absolute inset-0" style={{ willChange: 'clip-path' }}>
+        {/* Image — left side */}
+        <div className="absolute left-0 top-0 h-full" style={{ width: '62%' }}>
+          <Image
+            src="https://images.unsplash.com/photo-1558171813-4c088753af8f?w=1200&h=1600&fit=crop"
+            alt="Fashion Editorial"
+            fill
+            className="object-cover"
+            sizes="62vw"
+          />
+          <div
+            className="absolute top-0 right-0 h-full w-[18%]"
+            style={{ background: `linear-gradient(to left, ${BG}, transparent)` }}
+          />
         </div>
-        <div className="absolute top-[8%] right-[6%] z-10">
-          <span
-            className="text-white/20 font-light"
-            style={{ fontFamily: DISPLAY, fontSize: 'clamp(4rem, 8vw, 8rem)' }}
-          >
-            01
-          </span>
-        </div>
-      </div>
 
-      <div
-        ref={txt1Ref}
-        className="absolute right-0 top-0 w-1/2 h-full flex flex-col justify-center px-[5vw]"
-        style={{ willChange: 'clip-path' }}
-      >
-        <span
-          className="uppercase tracking-[0.5em] text-white/30 mb-6 block"
-          style={{ fontFamily: SANS, fontSize: 'clamp(0.5rem, 0.65vw, 0.7rem)', fontWeight: 600 }}
+        {/* Text panel — right side, overflow visible so headline can break out */}
+        <div
+          className="absolute right-0 top-0 h-full"
+          style={{ width: '38%', backgroundColor: BG, overflow: 'visible' }}
         >
-          For The Fashion Designer
-        </span>
-        <h2
-          className="italic text-white leading-[1.05] mb-8"
-          style={{ fontFamily: DISPLAY, fontSize: 'clamp(2.8rem, 5vw, 5.5rem)', fontWeight: 300 }}
-        >
-          Your Runway<br />Is The World
-        </h2>
-        <div className="w-12 h-px bg-white/15 mb-8" />
-        <p
-          className="text-white/35 leading-[1.8] max-w-sm"
-          style={{ fontFamily: SANS, fontSize: 'clamp(0.8rem, 0.9vw, 0.95rem)', fontWeight: 300, letterSpacing: '0.02em' }}
-        >
-          We build the visual intensity that commands attention, focusing on movement,
-          structure, and the raw texture of your textiles to ensure your collection
-          leaves an indelible mark on the industry.
-        </p>
-        <span
-          className="uppercase tracking-[0.4em] text-white/15 mt-12 block"
-          style={{ fontFamily: SANS, fontSize: 'clamp(0.5rem, 0.55vw, 0.6rem)', fontWeight: 500 }}
-        >
-          Movement &bull; Structure &bull; Texture
-        </span>
-      </div>
+          <div className="h-full flex flex-col justify-center px-[clamp(1.5rem,3vw,3rem)]">
+            <span style={{
+              fontFamily: SANS, fontSize: 'clamp(0.7rem, 0.8vw, 0.85rem)', fontWeight: 600,
+              color: GOLD, letterSpacing: '0.4em', textTransform: 'uppercase', display: 'block', marginBottom: '1.5rem',
+            }}>
+              For The Fashion Designer
+            </span>
 
-      {/* ── Pair 2: Text left, image right ── */}
-      <div
-        ref={txt2Ref}
-        className="absolute left-0 top-0 w-1/2 h-full flex flex-col justify-center items-end px-[5vw]"
-        style={{ willChange: 'clip-path' }}
-      >
-        <div className="text-right">
-          <span
-            className="uppercase tracking-[0.5em] text-white/30 mb-6 block"
-            style={{ fontFamily: SANS, fontSize: 'clamp(0.5rem, 0.65vw, 0.7rem)', fontWeight: 600 }}
-          >
-            For The Jewellery Couturier
-          </span>
-          <h2
-            className="italic text-white leading-[1.05] mb-8"
-            style={{ fontFamily: DISPLAY, fontSize: 'clamp(2.8rem, 5vw, 5.5rem)', fontWeight: 300 }}
-          >
-            Life Within<br />The Stone
-          </h2>
-          <div className="w-12 h-px bg-white/15 mb-8 ml-auto" />
-          <p
-            className="text-white/35 leading-[1.8] max-w-sm ml-auto"
-            style={{ fontFamily: SANS, fontSize: 'clamp(0.8rem, 0.9vw, 0.95rem)', fontWeight: 300, letterSpacing: '0.02em' }}
-          >
-            Our lens finds the unspoken dialogue between the piece and the wearer,
-            documenting the subtle complexity that defines your house.
-          </p>
-          <span
-            className="uppercase tracking-[0.4em] text-white/15 mt-12 block"
-            style={{ fontFamily: SANS, fontSize: 'clamp(0.5rem, 0.55vw, 0.6rem)', fontWeight: 500 }}
-          >
-            Prestige &bull; Heritage &bull; Patina
-          </span>
+            {/* Headline — in flow, but negative margin pulls it left over the image */}
+            <h2 style={{
+              fontFamily: DISPLAY, fontSize: 'clamp(3rem, 5.5vw, 6.5rem)', fontWeight: 300,
+              fontStyle: 'italic', color: '#fff', lineHeight: 0.95, marginBottom: '0.5em',
+              marginLeft: 'clamp(-200px, -18vw, -100px)',
+              textShadow: '0 2px 30px rgba(0,0,0,0.7)',
+            }}>
+              Your Runway<br />Is The World
+            </h2>
+
+            <span style={{ fontFamily: NUSRAT, fontSize: 'clamp(1.3rem, 2.2vw, 2.2rem)', color: GOLD, display: 'block', marginBottom: '1.2rem' }}>
+              movement.
+            </span>
+
+            <div className="w-8 h-px mb-5" style={{ backgroundColor: GOLD, opacity: 0.4 }} />
+
+            <p style={{
+              fontFamily: SANS, fontSize: 'clamp(0.82rem, 0.92vw, 0.95rem)', fontWeight: 300,
+              color: 'rgba(255,255,255,0.55)', lineHeight: 1.85, maxWidth: '28ch', marginBottom: '1.5rem',
+            }}>
+              We build the visual intensity that commands attention, focusing on movement, structure, and the raw texture of your textiles.
+            </p>
+
+            <div className="flex gap-4">
+              {['Movement', 'Structure', 'Texture'].map(tag => (
+                <span key={tag} style={{
+                  fontFamily: SANS, fontSize: 'clamp(0.6rem, 0.68vw, 0.7rem)', fontWeight: 500,
+                  color: 'rgba(255,255,255,0.25)', letterSpacing: '0.25em', textTransform: 'uppercase',
+                }}>{tag}</span>
+              ))}
+            </div>
+          </div>
+
+          <span className="absolute bottom-[5vh] left-[3vw]" style={{
+            fontFamily: DISPLAY, fontSize: 'clamp(1.2rem, 2vw, 2.2rem)', color: 'rgba(255,255,255,0.08)', fontWeight: 300, fontStyle: 'italic',
+          }}>01</span>
         </div>
       </div>
 
-      <div
-        ref={img2Ref}
-        className="absolute right-0 top-0 w-1/2 h-full overflow-hidden"
-        style={{ willChange: 'clip-path' }}
-      >
-        <Image
-          src="https://images.unsplash.com/photo-1617038220319-276d3cfab638?w=1000&h=1400&fit=crop"
-          alt="Luxury & Jewellery"
-          fill
-          className="object-cover"
-          sizes="50vw"
-        />
-        <div className="absolute bottom-[8%] right-[6%] z-10">
-          <span
-            className="uppercase tracking-[0.4em] text-white/40"
-            style={{ fontFamily: SANS, fontSize: 'clamp(0.55rem, 0.7vw, 0.75rem)', fontWeight: 500 }}
-          >
-            Neelakar &mdash; Est. 2024
-          </span>
+      {/* ═══ Pair 2: Jewellery — image RIGHT, text panel LEFT, headline overlaps onto image ═══ */}
+      <div ref={pair2Ref} className="absolute inset-0" style={{ willChange: 'clip-path' }}>
+        {/* Image — right side */}
+        <div className="absolute right-0 top-0 h-full" style={{ width: '62%' }}>
+          <Image
+            src="https://images.unsplash.com/photo-1617038220319-276d3cfab638?w=1200&h=1600&fit=crop"
+            alt="Jewellery Editorial"
+            fill
+            className="object-cover"
+            sizes="62vw"
+          />
+          <div
+            className="absolute top-0 left-0 h-full w-[18%]"
+            style={{ background: `linear-gradient(to right, ${BG}, transparent)` }}
+          />
         </div>
-        <div className="absolute top-[8%] left-[6%] z-10">
-          <span
-            className="text-white/20 font-light"
-            style={{ fontFamily: DISPLAY, fontSize: 'clamp(4rem, 8vw, 8rem)' }}
-          >
-            02
-          </span>
+
+        {/* Text panel — left side, overflow visible so headline can break out */}
+        <div
+          className="absolute left-0 top-0 h-full"
+          style={{ width: '38%', backgroundColor: BG, overflow: 'visible' }}
+        >
+          <div className="h-full flex flex-col justify-center items-end text-right px-[clamp(1.5rem,3vw,3rem)]">
+            <div style={{ overflow: 'visible' }}>
+              <span style={{
+                fontFamily: SANS, fontSize: 'clamp(0.7rem, 0.8vw, 0.85rem)', fontWeight: 600,
+                color: GOLD, letterSpacing: '0.4em', textTransform: 'uppercase', display: 'block', marginBottom: '1.5rem',
+              }}>
+                For The Jewellery Couturier
+              </span>
+
+              {/* Headline — in flow, but negative margin pulls it right over the image */}
+              <h2 style={{
+                fontFamily: DISPLAY, fontSize: 'clamp(3rem, 5.5vw, 6.5rem)', fontWeight: 300,
+                fontStyle: 'italic', color: '#fff', lineHeight: 0.95, marginBottom: '0.5em',
+                marginRight: 'clamp(-200px, -18vw, -100px)',
+                textShadow: '0 2px 30px rgba(0,0,0,0.7)',
+              }}>
+                Life Within<br />The Stone
+              </h2>
+
+              <span style={{ fontFamily: NUSRAT, fontSize: 'clamp(1.3rem, 2.2vw, 2.2rem)', color: GOLD, display: 'block', marginBottom: '1.2rem' }}>
+                radiance.
+              </span>
+
+              <div className="w-8 h-px mb-5 ml-auto" style={{ backgroundColor: GOLD, opacity: 0.4 }} />
+
+              <p style={{
+                fontFamily: SANS, fontSize: 'clamp(0.82rem, 0.92vw, 0.95rem)', fontWeight: 300,
+                color: 'rgba(255,255,255,0.55)', lineHeight: 1.85, maxWidth: '28ch', marginLeft: 'auto', marginBottom: '1.5rem',
+              }}>
+                Our lens finds the unspoken dialogue between the piece and the wearer, documenting the subtle complexity that defines your house.
+              </p>
+
+              <div className="flex gap-4 justify-end">
+                {['Prestige', 'Heritage', 'Patina'].map(tag => (
+                  <span key={tag} style={{
+                    fontFamily: SANS, fontSize: 'clamp(0.6rem, 0.68vw, 0.7rem)', fontWeight: 500,
+                    color: 'rgba(255,255,255,0.25)', letterSpacing: '0.25em', textTransform: 'uppercase',
+                  }}>{tag}</span>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          <span className="absolute bottom-[5vh] right-[3vw]" style={{
+            fontFamily: DISPLAY, fontSize: 'clamp(1.2rem, 2vw, 2.2rem)', color: 'rgba(255,255,255,0.08)', fontWeight: 300, fontStyle: 'italic',
+          }}>02</span>
         </div>
       </div>
     </div>

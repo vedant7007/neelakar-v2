@@ -1,7 +1,5 @@
 import SmoothScroll from "@/components/SmoothScroll";
-import ScrollProgress from "@/components/ScrollProgress";
-import ScrollToTop from "@/components/ScrollToTop";
-import WavyClickEffect from "@/components/WavyClickEffect";
+import SparkleClickEffect from "@/components/SparkleClickEffect";
 
 export default function SiteLayout({
   children,
@@ -10,9 +8,7 @@ export default function SiteLayout({
 }) {
   return (
     <>
-      <ScrollProgress />
-      <ScrollToTop />
-      <WavyClickEffect />
+      <SparkleClickEffect />
       <SmoothScroll />
       <div className="flex-1">{children}</div>
     </>
