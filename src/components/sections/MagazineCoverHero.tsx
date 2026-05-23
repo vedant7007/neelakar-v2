@@ -1,7 +1,6 @@
 'use client'
 
 import { useRef, useState, useEffect, useLayoutEffect } from 'react'
-import Image from 'next/image'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import LiquidEther from '@/components/LiquidEther'
@@ -30,6 +29,7 @@ export default function MagazineCoverHero() {
   const metaLeftRef = useRef<HTMLDivElement>(null)
   const metaRightRef = useRef<HTMLDivElement>(null)
   const [isMobile, setIsMobile] = useState(false)
+  const [mouseInHero, setMouseInHero] = useState(false)
 
   useEffect(() => {
     const check = () => setIsMobile(window.innerWidth < 768)
@@ -83,8 +83,10 @@ export default function MagazineCoverHero() {
       ref={containerRef}
       className="relative z-[1] w-full h-screen overflow-hidden"
       style={{ backgroundColor: BG }}
+      onMouseEnter={() => setMouseInHero(true)}
+      onMouseLeave={() => setMouseInHero(false)}
     >
-      {!isMobile && (
+      {!isMobile && mouseInHero && (
         <div className="absolute inset-0 z-[1] pointer-events-auto opacity-70">
           <LiquidEther
             colors={[...ETHER_COLORS]}
@@ -125,14 +127,18 @@ export default function MagazineCoverHero() {
         style={{ willChange: 'transform, opacity' }}
       >
         <div className="relative" style={{ width: 'min(100vw, 1600px)', height: '97vh', marginBottom: '-4vh' }}>
-          <Image
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
             src="/cutout.png"
             alt="Fashion Editorial"
-            fill
-            className="object-contain object-bottom"
-            sizes="95vw"
-            priority
-            unoptimized
+            style={{
+              position: 'absolute',
+              inset: 0,
+              width: '100%',
+              height: '100%',
+              objectFit: 'contain',
+              objectPosition: 'bottom',
+            }}
           />
         </div>
       </div>
