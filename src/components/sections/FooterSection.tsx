@@ -22,7 +22,7 @@ interface Particle {
 const FOOTER_LINKS = [
   { text: 'Work', href: '#' },
   { text: 'Studio', href: '#' },
-  { text: 'Inquire', href: '#' },
+  { text: 'Inquire', href: '/create-with-us' },
   { text: 'Journal', href: '#' },
 ]
 

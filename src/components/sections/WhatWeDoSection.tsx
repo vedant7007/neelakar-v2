@@ -89,7 +89,7 @@ export default function WhatWeDoSection() {
 
       gsap.set(textGroup, { x: -window.innerWidth * 0.25 })
       gsap.set(howEl, { opacity: 0, y: 40 })
-      gsap.set(darkOverlay, { clipPath: 'circle(0% at 50% 50%)' })
+      gsap.set(darkOverlay, { clipPath: 'circle(0% at 50% 42%)' })
 
       stackCards.forEach((card, i) => {
         gsap.set(card, { y: '120vh', rotation: STACK_ROTATIONS[i] * 2.5, opacity: 0 })
@@ -139,11 +139,13 @@ export default function WhatWeDoSection() {
 
       // === ACT 5: Dark circle expands from HOW's O (0.50 → 0.58) ===
       tl.to(darkOverlay, {
-        clipPath: 'circle(150% at 50% 45%)',
+        clipPath: 'circle(150% at 50% 42%)',
         duration: 0.08,
         ease: 'power2.out',
       }, 0.50)
 
+      // Only WE DO turns white — HOW stays gold
+      tl.to(weDoEl.querySelectorAll('*'), { color: '#ffffff', duration: 0.04 }, 0.52)
       tl.to(weDoEl, { color: '#ffffff', duration: 0.04 }, 0.52)
 
       // === ACT 6: Process cards rise alternating (0.60 → 0.86) ===
@@ -265,7 +267,7 @@ export default function WhatWeDoSection() {
             We create campaigns, films, and the systems that get them made.
           </p>
           <a
-            href="#"
+            href="/create-with-us"
             className="inline-block px-5 py-2.5 transition-colors duration-300 uppercase hover:bg-black hover:text-white"
             style={{
               fontFamily: SANS, fontSize: 'clamp(0.5rem, 0.6vw, 0.65rem)',

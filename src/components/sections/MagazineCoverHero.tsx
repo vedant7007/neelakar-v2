@@ -94,6 +94,7 @@ export default function MagazineCoverHero() {
             iterationsPoisson={18}
             iterationsViscous={18}
             isBounce
+            autoDemo={false}
             takeoverDuration={0.3}
           />
         </div>
@@ -166,11 +167,11 @@ export default function MagazineCoverHero() {
             tag="span"
             textAlign="left"
             shuffleDirection="up"
-            animationMode="random"
-            maxDelay={2.5}
-            duration={0.6}
+            animationMode="evenodd"
+            stagger={0.04}
+            duration={0.5}
             ease="power2.out"
-            shuffleTimes={2}
+            shuffleTimes={1}
             loop
             loopDelay={6}
             triggerOnce={false}
@@ -197,11 +198,11 @@ export default function MagazineCoverHero() {
             tag="span"
             textAlign="left"
             shuffleDirection="up"
-            animationMode="random"
-            maxDelay={3}
-            duration={0.6}
+            animationMode="evenodd"
+            stagger={0.04}
+            duration={0.5}
             ease="power2.out"
-            shuffleTimes={2}
+            shuffleTimes={1}
             loop
             loopDelay={7}
             triggerOnce={false}
@@ -228,11 +229,11 @@ export default function MagazineCoverHero() {
             tag="span"
             textAlign="right"
             shuffleDirection="up"
-            animationMode="random"
-            maxDelay={2.5}
-            duration={0.6}
+            animationMode="evenodd"
+            stagger={0.04}
+            duration={0.5}
             ease="power2.out"
-            shuffleTimes={2}
+            shuffleTimes={1}
             loop
             loopDelay={6.5}
             triggerOnce={false}
@@ -259,11 +260,11 @@ export default function MagazineCoverHero() {
             tag="span"
             textAlign="right"
             shuffleDirection="up"
-            animationMode="random"
-            maxDelay={2.8}
-            duration={0.6}
+            animationMode="evenodd"
+            stagger={0.04}
+            duration={0.5}
             ease="power2.out"
-            shuffleTimes={2}
+            shuffleTimes={1}
             loop
             loopDelay={7}
             triggerOnce={false}

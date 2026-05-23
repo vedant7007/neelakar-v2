@@ -193,47 +193,47 @@ export default function CampaignsSection() {
             style={{ padding: 'clamp(2rem, 7vw, 7rem)' }}>
             <div className={`max-w-lg ${isEven ? 'text-left' : 'text-right'}`}>
 
-              <div className="anim-line overflow-hidden" style={{ willChange: 'transform, opacity, clip-path' }}>
+              <div className="anim-line" style={{ willChange: 'transform, opacity, clip-path' }}>
                 <span style={{
                   fontFamily: SANS, fontSize: 'clamp(0.65rem, 0.72vw, 0.75rem)', fontWeight: 600,
                   color: GOLD, letterSpacing: '0.4em', textTransform: 'uppercase', display: 'block', marginBottom: '1.5rem',
                 }}>{c.label}</span>
               </div>
 
-              <div className="anim-line overflow-hidden" style={{ willChange: 'transform, opacity, clip-path' }}>
+              <div className="anim-line" style={{ willChange: 'transform, opacity, clip-path' }}>
                 <span style={{
                   fontFamily: DISPLAY, fontSize: 'clamp(2.8rem, 5.5vw, 5.5rem)', fontWeight: 300,
                   fontStyle: 'italic', color: '#fff', lineHeight: 1.05, display: 'block',
                 }}>{c.headline1}</span>
               </div>
 
-              <div className="anim-line overflow-hidden" style={{ willChange: 'transform, opacity, clip-path', marginBottom: '0.3em' }}>
+              <div className="anim-line" style={{ willChange: 'transform, opacity, clip-path', marginBottom: '0.3em' }}>
                 <span style={{
                   fontFamily: DISPLAY, fontSize: 'clamp(2.8rem, 5.5vw, 5.5rem)', fontWeight: 300,
                   fontStyle: 'italic', color: '#fff', lineHeight: 1.05, display: 'block',
                 }}>{c.headline2}</span>
               </div>
 
-              <div className="anim-line overflow-hidden" style={{ willChange: 'transform, opacity, clip-path' }}>
+              <div className="anim-line" style={{ willChange: 'transform, opacity, clip-path' }}>
                 <span style={{
                   fontFamily: NUSRAT, fontSize: 'clamp(1.8rem, 3.5vw, 3.5rem)',
                   color: GOLD, display: 'block', marginBottom: '1.5rem',
                 }}>{c.accent}</span>
               </div>
 
-              <div className="anim-line overflow-hidden" style={{ willChange: 'transform, opacity, clip-path' }}>
+              <div className="anim-line" style={{ willChange: 'transform, opacity, clip-path' }}>
                 <div className={`h-px w-10 mb-6 ${isEven ? '' : 'ml-auto'}`}
                   style={{ backgroundColor: GOLD, opacity: 0.4 }} />
               </div>
 
-              <div className="anim-line overflow-hidden" style={{ willChange: 'transform, opacity, clip-path' }}>
+              <div className="anim-line" style={{ willChange: 'transform, opacity, clip-path' }}>
                 <p style={{
                   fontFamily: SANS, fontSize: 'clamp(0.82rem, 0.88vw, 0.92rem)', fontWeight: 300,
                   color: 'rgba(255,255,255,0.6)', lineHeight: 1.8, marginBottom: '1.5rem', maxWidth: '36ch',
                 }} className={isEven ? '' : 'ml-auto'}>{c.description}</p>
               </div>
 
-              <div className="anim-line overflow-hidden" style={{ willChange: 'transform, opacity, clip-path' }}>
+              <div className="anim-line" style={{ willChange: 'transform, opacity, clip-path' }}>
                 <div className={`flex gap-4 ${isEven ? '' : 'justify-end'}`}>
                   {c.tags.map((tag) => (
                     <span key={tag} style={{
