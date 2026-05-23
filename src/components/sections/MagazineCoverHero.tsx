@@ -95,6 +95,8 @@ export default function MagazineCoverHero() {
             iterationsViscous={18}
             isBounce
             autoDemo={false}
+            autoSpeed={0}
+            autoIntensity={0}
             takeoverDuration={0.3}
           />
         </div>
@@ -130,6 +132,7 @@ export default function MagazineCoverHero() {
             className="object-contain object-bottom"
             sizes="95vw"
             priority
+            unoptimized
           />
         </div>
       </div>
