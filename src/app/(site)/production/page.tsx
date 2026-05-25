@@ -268,6 +268,20 @@ export default function ProductionPage() {
               })}
             </div>
           </div>
+
+          <div className="reveal flex justify-center mt-6">
+            <Link
+              href={activeTab === 'photo' ? '/production/photography' : '/production/videography'}
+              className="group inline-flex items-center gap-3 transition-colors duration-300 hover:!text-white"
+              style={{
+                textDecoration: 'none', fontFamily: SANS,
+                fontSize: 'clamp(0.58rem, 0.65vw, 0.68rem)', fontWeight: 500,
+                color: GOLD, letterSpacing: '0.3em', textTransform: 'uppercase',
+              }}>
+              Explore Full {activeTab === 'photo' ? 'Photography' : 'Videography'} Portfolio
+              <span className="inline-block h-px w-5 group-hover:w-8 transition-all duration-300" style={{ backgroundColor: GOLD }} />
+            </Link>
+          </div>
         </div>
 
         <style>{`
