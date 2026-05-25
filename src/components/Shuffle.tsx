@@ -200,20 +200,15 @@ const Shuffle: React.FC<ShuffleProps> = ({
         playingRef.current = true;
         ambientCall = null;
         const selected = selectedCharacters();
-        const offset = directionalOffset();
         const pulseDuration = Math.max(0.26, duration);
-        const scrambleSteps = Math.max(1, Math.min(3, Math.floor(shuffleTimes)));
-        const fadeTime = pulseDuration * 0.22;
-        const scrambleTime = pulseDuration * 0.14;
-        const settleTime = pulseDuration * 0.4;
-        const perCharTime = fadeTime + scrambleSteps * scrambleTime + settleTime;
-        const spreadWindow = Math.max(maxDelay, perCharTime * 0.5 * selected.length);
+        const exitDur = pulseDuration * 0.25;
+        const enterDur = pulseDuration * 0.75;
+        const gap = pulseDuration * 0.08;
+        const perCharTime = exitDur + gap + enterDur;
+        const spreadWindow = Math.max(maxDelay, perCharTime * 0.45 * selected.length);
 
         activeTimeline = gsap.timeline({
           onComplete: () => {
-            selected.forEach(char => {
-              char.textContent = originals.get(char) ?? '';
-            });
             playingRef.current = false;
             activeTimeline = null;
             onShuffleComplete?.();
@@ -222,37 +217,28 @@ const Shuffle: React.FC<ShuffleProps> = ({
         });
 
         selected.forEach((char) => {
-          const original = originals.get(char) ?? '';
           const startAt = Math.random() * spreadWindow;
+          const mag = gsap.utils.random(14, 24);
+
+          let exitX = 0, exitY = 0, enterX = 0, enterY = 0;
+          if (shuffleDirection === 'up')         { exitY = -mag; enterY = mag; }
+          else if (shuffleDirection === 'down')  { exitY = mag;  enterY = -mag; }
+          else if (shuffleDirection === 'left')  { exitX = -mag; enterX = mag; }
+          else                                   { exitX = mag;  enterX = -mag; }
 
           if (colorFrom) activeTimeline?.set(char, { color: colorFrom }, startAt);
-          activeTimeline?.to(
-            char,
-            { opacity: 0.55, x: offset.x, y: offset.y, duration: fadeTime, ease: 'power2.inOut' },
-            startAt
-          );
 
-          for (let step = 0; step < scrambleSteps; step += 1) {
-            const at = startAt + fadeTime + step * scrambleTime;
-            activeTimeline?.call(() => {
-              char.textContent = shuffledGlyph(original);
-            }, undefined, at);
-            activeTimeline?.to(
-              char,
-              { opacity: 0.7, x: -offset.x * 0.3, y: -offset.y * 0.3, duration: scrambleTime, ease: 'power2.inOut' },
-              at
-            );
-          }
+          activeTimeline?.to(char, {
+            x: exitX, y: exitY, opacity: 0,
+            duration: exitDur, ease: 'power2.in'
+          }, startAt);
 
-          const settleAt = startAt + fadeTime + scrambleSteps * scrambleTime;
-          activeTimeline?.call(() => {
-            char.textContent = original;
-          }, undefined, settleAt);
-          activeTimeline?.to(
-            char,
-            { opacity: 1, x: 0, y: 0, color: colorTo, duration: settleTime, ease },
-            settleAt
-          );
+          activeTimeline?.set(char, { x: enterX, y: enterY, opacity: 0 }, startAt + exitDur + gap * 0.5);
+
+          activeTimeline?.to(char, {
+            x: 0, y: 0, opacity: 1, color: colorTo || undefined,
+            duration: enterDur, ease: 'power2.out'
+          }, startAt + exitDur + gap);
         });
       };
 

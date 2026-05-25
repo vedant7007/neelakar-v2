@@ -196,6 +196,8 @@ export default function CreateWithUsPage() {
   const heroRef = useRef<HTMLDivElement>(null)
   const imageRefs = useRef<(HTMLDivElement | null)[]>([])
   const stepRef = useRef(0)
+  const imagePanelRef = useRef<HTMLDivElement>(null)
+  const formPanelRef = useRef<HTMLDivElement>(null)
 
   stepRef.current = step
 
@@ -245,12 +247,21 @@ export default function CreateWithUsPage() {
       tl.fromTo(nextImg, { opacity: 0, scale: 1.1 }, { opacity: 1, scale: 1, duration: 0.6, ease: 'power1.inOut' }, 0.2)
     }
 
+    const vw = window.innerWidth
+    if (vw >= 768 && imagePanelRef.current && formPanelRef.current) {
+      const panelW = vw * 0.42
+      const nextImageX = next % 2 === 0 ? 0 : vw - panelW
+      const nextFormX = next % 2 === 0 ? 0 : -panelW
+      tl.to(imagePanelRef.current, { x: nextImageX, duration: 0.75, ease: 'power3.inOut' }, 0.1)
+      tl.to(formPanelRef.current, { x: nextFormX, duration: 0.75, ease: 'power3.inOut' }, 0.1)
+    }
+
     tl.call(() => {
       setStep(next)
       window.scrollTo({ top: 0, behavior: 'instant' as ScrollBehavior })
       if (heroRef.current) gsap.set(heroRef.current, { opacity: 1, y: 0, filter: 'blur(0px)' })
       if (formRef.current) gsap.set(formRef.current, { opacity: 1, y: 0, filter: 'blur(0px)' })
-    }, undefined, 0.35)
+    }, undefined, 0.6)
   }, [])
 
   useEffect(() => {
@@ -265,11 +276,37 @@ export default function CreateWithUsPage() {
   }, [go])
 
   const progress = ((step + 1) / ACTS.length) * 100
+  const imageOnLeft = step % 2 === 0
+
+  useEffect(() => {
+    const handleResize = () => {
+      const vw = window.innerWidth
+      const s = stepRef.current
+      if (vw < 768) {
+        if (imagePanelRef.current) gsap.set(imagePanelRef.current, { x: 0 })
+        if (formPanelRef.current) gsap.set(formPanelRef.current, { x: 0 })
+      } else {
+        const panelW = vw * 0.42
+        const imgX = s % 2 === 0 ? 0 : vw - panelW
+        const frmX = s % 2 === 0 ? 0 : -panelW
+        if (imagePanelRef.current) gsap.set(imagePanelRef.current, { x: imgX })
+        if (formPanelRef.current) gsap.set(formPanelRef.current, { x: frmX })
+      }
+    }
+    window.addEventListener('resize', handleResize)
+    return () => window.removeEventListener('resize', handleResize)
+  }, [])
 
   return (
     <div className="relative w-full min-h-screen" style={{ backgroundColor: BG }}>
-      {/* ── LEFT PANEL: Fixed atmospheric imagery ── */}
-      <div className="hidden md:block fixed left-0 top-0 w-[42vw] h-screen z-10 overflow-hidden">
+      <div className="fixed top-0 left-0 right-0 z-50 h-[2px]" style={{ backgroundColor: 'rgba(255,255,255,0.02)' }}>
+        <div className="h-full transition-all duration-1000 ease-out"
+          style={{ width: `${progress}%`, backgroundColor: GOLD, boxShadow: '0 0 15px rgba(200,169,110,0.35)' }} />
+      </div>
+      <div className="hidden md:block"><MouseGlow /></div>
+
+      {/* ── IMAGE PANEL ── */}
+      <div ref={imagePanelRef} className="hidden md:block fixed left-0 top-0 w-[42vw] h-screen z-10 overflow-hidden">
         {ACT_IMAGES.map((src, i) => (
           <div key={i} ref={el => { imageRefs.current[i] = el }}
             className="absolute inset-0"
@@ -299,8 +336,8 @@ export default function CreateWithUsPage() {
           }}>{ACTS[step].num}</span>
         </div>
 
-        <div className="absolute right-0 top-[12%] bottom-[12%] w-px"
-          style={{ backgroundColor: GOLD, opacity: 0.1 }} />
+        <div className="absolute top-[12%] bottom-[12%] w-px"
+          style={{ right: imageOnLeft ? 0 : 'auto', left: imageOnLeft ? 'auto' : 0, backgroundColor: GOLD, opacity: 0.1 }} />
 
         <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex gap-3 z-10">
           {ACTS.map((_, i) => (
@@ -315,15 +352,8 @@ export default function CreateWithUsPage() {
         </div>
       </div>
 
-      {/* ── RIGHT PANEL: Form (flows with page scroll) ── */}
-      <div className="relative md:ml-[42vw] min-h-screen">
-        <div className="hidden md:block"><MouseGlow /></div>
-
-        <div className="fixed top-0 left-0 md:left-[42vw] right-0 z-50 h-[2px]" style={{ backgroundColor: 'rgba(255,255,255,0.02)' }}>
-          <div className="h-full transition-all duration-1000 ease-out"
-            style={{ width: `${progress}%`, backgroundColor: GOLD, boxShadow: '0 0 15px rgba(200,169,110,0.35)' }} />
-        </div>
-
+      {/* ── FORM PANEL ── */}
+      <div ref={formPanelRef} className="relative md:ml-[42vw] min-h-screen">
         <div className="md:hidden absolute top-0 left-0 right-0 h-[30vh] z-0 overflow-hidden pointer-events-none">
           <Image src={ACT_IMAGES[step]} alt="" fill className="object-cover" sizes="100vw"
             style={{ opacity: 0.04 }} />
