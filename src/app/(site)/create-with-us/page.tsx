@@ -258,9 +258,17 @@ export default function CreateWithUsPage() {
 
     tl.call(() => {
       setStep(next)
-      window.scrollTo({ top: 0, behavior: 'instant' as ScrollBehavior })
       if (heroRef.current) gsap.set(heroRef.current, { opacity: 1, y: 0, filter: 'blur(0px)' })
       if (formRef.current) gsap.set(formRef.current, { opacity: 1, y: 0, filter: 'blur(0px)' })
+      setTimeout(() => {
+        const lenis = (window as Window & { __lenis?: { scrollTo: (t: number, o?: { immediate?: boolean }) => void; resize: () => void } }).__lenis
+        if (lenis) {
+          lenis.scrollTo(0, { immediate: true })
+          lenis.resize()
+        } else {
+          window.scrollTo({ top: 0, behavior: 'instant' as ScrollBehavior })
+        }
+      }, 50)
     }, undefined, 0.6)
   }, [])
 
