@@ -250,7 +250,7 @@ export default function CreateWithUsPage() {
       window.scrollTo({ top: 0, behavior: 'instant' as ScrollBehavior })
       if (heroRef.current) gsap.set(heroRef.current, { opacity: 1, y: 0, filter: 'blur(0px)' })
       if (formRef.current) gsap.set(formRef.current, { opacity: 1, y: 0, filter: 'blur(0px)' })
-    }, undefined, undefined, 0.35)
+    }, undefined, 0.35)
   }, [])
 
   useEffect(() => {
