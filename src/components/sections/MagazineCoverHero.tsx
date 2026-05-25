@@ -109,6 +109,8 @@ export default function MagazineCoverHero() {
             resolution={0.5}
             iterationsPoisson={18}
             iterationsViscous={18}
+            velocityDecay={0.96}
+            isBounce={false}
             autoDemo={false}
             autoSpeed={0}
             autoIntensity={0}

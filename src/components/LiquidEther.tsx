@@ -11,6 +11,7 @@ export interface LiquidEtherProps {
   iterationsViscous?: number
   iterationsPoisson?: number
   dt?: number
+  velocityDecay?: number
   BFECC?: boolean
   resolution?: number
   isBounce?: boolean
@@ -34,6 +35,7 @@ interface SimOptions {
   viscous: number
   isBounce: boolean
   dt: number
+  velocity_decay: number
   isViscous: boolean
   BFECC: boolean
 }
@@ -64,6 +66,7 @@ export default function LiquidEther({
   iterationsViscous = 32,
   iterationsPoisson = 32,
   dt = 0.014,
+  velocityDecay = 1,
   BFECC = true,
   resolution = 0.5,
   isBounce = false,
@@ -431,6 +434,7 @@ export default function LiquidEther({
   precision highp float;
   uniform sampler2D velocity;
   uniform float dt;
+  uniform float velocityDecay;
   uniform bool isBFECC;
   uniform vec2 fboSize;
   uniform vec2 px;
@@ -441,7 +445,7 @@ export default function LiquidEther({
       vec2 vel = texture2D(velocity, uv).xy;
       vec2 uv2 = uv - vel * dt * ratio;
       vec2 newVel = texture2D(velocity, uv2).xy;
-      gl_FragColor = vec4(newVel, 0.0, 0.0);
+      gl_FragColor = vec4(newVel * velocityDecay, 0.0, 0.0);
     } else {
       vec2 spot_new = uv;
       vec2 vel_old = texture2D(velocity, uv).xy;
@@ -453,7 +457,7 @@ export default function LiquidEther({
       vec2 vel_2 = texture2D(velocity, spot_new3).xy;
       vec2 spot_old2 = spot_new3 - vel_2 * dt * ratio;
       vec2 newVel2 = texture2D(velocity, spot_old2).xy;
-      gl_FragColor = vec4(newVel2, 0.0, 0.0);
+      gl_FragColor = vec4(newVel2 * velocityDecay, 0.0, 0.0);
     }
   }
 `
@@ -601,6 +605,7 @@ export default function LiquidEther({
               fboSize: { value: simProps.fboSize },
               velocity: { value: simProps.src.texture },
               dt: { value: simProps.dt },
+              velocityDecay: { value: simProps.velocityDecay },
               isBFECC: { value: true },
             },
           },
@@ -628,13 +633,15 @@ export default function LiquidEther({
         this.scene!.add(this.line)
       }
       update(...args: any[]) {
-        const { dt, isBounce, BFECC } = (args[0] || {}) as {
+        const { dt, velocityDecay, isBounce, BFECC } = (args[0] || {}) as {
           dt?: number
+          velocityDecay?: number
           isBounce?: boolean
           BFECC?: boolean
         }
         if (!this.uniforms) return
         if (typeof dt === 'number') this.uniforms.dt.value = dt
+        if (typeof velocityDecay === 'number') this.uniforms.velocityDecay.value = velocityDecay
         if (typeof isBounce === 'boolean') this.line.visible = isBounce
         if (typeof BFECC === 'boolean') this.uniforms.isBFECC.value = BFECC
         super.update()
@@ -860,6 +867,7 @@ export default function LiquidEther({
           viscous: 30,
           isBounce: false,
           dt: 0.014,
+          velocity_decay: 1,
           isViscous: false,
           BFECC: true,
           ...options,
@@ -895,6 +903,7 @@ export default function LiquidEther({
           cellScale: this.cellScale,
           fboSize: this.fboSize,
           dt: this.options.dt,
+          velocityDecay: this.options.velocity_decay,
           src: this.fbos.vel_0,
           dst: this.fbos.vel_1,
         })
@@ -952,6 +961,7 @@ export default function LiquidEther({
         else this.boundarySpace.copy(this.cellScale)
         this.advection.update({
           dt: this.options.dt,
+          velocityDecay: this.options.velocity_decay,
           isBounce: this.options.isBounce,
           BFECC: this.options.BFECC,
         })
@@ -1129,6 +1139,7 @@ export default function LiquidEther({
         iterations_viscous: iterationsViscous,
         iterations_poisson: iterationsPoisson,
         dt,
+        velocity_decay: velocityDecay,
         BFECC,
         resolution,
         isBounce,
@@ -1191,6 +1202,7 @@ export default function LiquidEther({
     BFECC,
     cursorSize,
     dt,
+    velocityDecay,
     isBounce,
     isViscous,
     iterationsPoisson,
@@ -1221,6 +1233,7 @@ export default function LiquidEther({
       iterations_viscous: iterationsViscous,
       iterations_poisson: iterationsPoisson,
       dt,
+      velocity_decay: velocityDecay,
       BFECC,
       resolution,
       isBounce,
@@ -1244,6 +1257,7 @@ export default function LiquidEther({
     iterationsViscous,
     iterationsPoisson,
     dt,
+    velocityDecay,
     BFECC,
     resolution,
     isBounce,

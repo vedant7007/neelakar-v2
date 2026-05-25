@@ -1,9 +1,8 @@
-import React, { useRef, useEffect, useState, useMemo } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { SplitText as GSAPSplitText } from 'gsap/SplitText';
 import { useGSAP } from '@gsap/react';
-import { JSX } from 'react';
 
 gsap.registerPlugin(ScrollTrigger, GSAPSplitText);
 
@@ -33,6 +32,8 @@ export interface ShuffleProps {
   triggerOnHover?: boolean;
 }
 
+const DEFAULT_CHARSET = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+
 const Shuffle: React.FC<ShuffleProps> = ({
   text,
   className = '',
@@ -47,7 +48,6 @@ const Shuffle: React.FC<ShuffleProps> = ({
   textAlign = 'center',
   onShuffleComplete,
   shuffleTimes = 1,
-  animationMode = 'evenodd',
   loop = false,
   loopDelay = 0,
   stagger = 0.03,
@@ -61,310 +61,230 @@ const Shuffle: React.FC<ShuffleProps> = ({
   const ref = useRef<HTMLElement>(null);
   const [fontsLoaded, setFontsLoaded] = useState(false);
   const [ready, setReady] = useState(false);
-
   const splitRef = useRef<GSAPSplitText | null>(null);
-  const wrappersRef = useRef<HTMLElement[]>([]);
-  const tlRef = useRef<gsap.core.Timeline | null>(null);
   const playingRef = useRef(false);
-  const hoverHandlerRef = useRef<((e: Event) => void) | null>(null);
 
   useEffect(() => {
-    if ('fonts' in document) {
-      if (document.fonts.status === 'loaded') setFontsLoaded(true);
-      else document.fonts.ready.then(() => setFontsLoaded(true));
-    } else setFontsLoaded(true);
+    let active = true;
+    const markFontsLoaded = () => {
+      if (active) setFontsLoaded(true);
+    };
+
+    if (!('fonts' in document) || document.fonts.status === 'loaded') {
+      const frame = window.requestAnimationFrame(markFontsLoaded);
+      return () => {
+        active = false;
+        window.cancelAnimationFrame(frame);
+      };
+    }
+
+    document.fonts.ready.then(markFontsLoaded);
+
+    return () => {
+      active = false;
+    };
   }, []);
 
   const scrollTriggerStart = useMemo(() => {
     const startPct = (1 - threshold) * 100;
-    const mm = /^(-?\d+(?:\.\d+)?)(px|em|rem|%)?$/.exec(rootMargin || '');
-    const mv = mm ? parseFloat(mm[1]) : 0;
-    const mu = mm ? mm[2] || 'px' : 'px';
-    const sign = mv === 0 ? '' : mv < 0 ? `-=${Math.abs(mv)}${mu}` : `+=${mv}${mu}`;
-    return `top ${startPct}%${sign}`;
+    const marginMatch = /^(-?\d+(?:\.\d+)?)(px|em|rem|%)?$/.exec(rootMargin || '');
+    const marginValue = marginMatch ? parseFloat(marginMatch[1]) : 0;
+    const marginUnit = marginMatch ? marginMatch[2] || 'px' : 'px';
+    const marginOffset =
+      marginValue === 0 ? '' : marginValue < 0 ? `-=${Math.abs(marginValue)}${marginUnit}` : `+=${marginValue}${marginUnit}`;
+    return `top ${startPct}%${marginOffset}`;
   }, [threshold, rootMargin]);
 
   useGSAP(
     () => {
-      if (!ref.current || !text || !fontsLoaded) return;
-      if (respectReducedMotion && window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      const el = ref.current;
+      if (!el || !text || !fontsLoaded) return;
+
+      if (respectReducedMotion && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        setReady(true);
         onShuffleComplete?.();
         return;
       }
 
-      const el = ref.current as HTMLElement;
-      const start = scrollTriggerStart;
+      let disposed = false;
+      let ambientCall: gsap.core.Tween | null = null;
+      let activeTimeline: gsap.core.Timeline | null = null;
+      let chars: HTMLElement[] = [];
+      const originals = new Map<HTMLElement, string>();
 
-      const removeHover = () => {
-        if (hoverHandlerRef.current && ref.current) {
-          ref.current.removeEventListener('mouseenter', hoverHandlerRef.current);
-          hoverHandlerRef.current = null;
-        }
+      const restoreCharacters = () => {
+        chars.forEach(char => {
+          char.textContent = originals.get(char) ?? '';
+        });
+        gsap.set(chars, { clearProps: 'opacity,transform,color,willChange' });
       };
 
-      const teardown = () => {
-        if (tlRef.current) {
-          tlRef.current.kill();
-          tlRef.current = null;
-        }
-        if (wrappersRef.current.length) {
-          wrappersRef.current.forEach(wrap => {
-            const inner = wrap.firstElementChild as HTMLElement | null;
-            const orig = inner?.querySelector('[data-orig="1"]') as HTMLElement | null;
-            if (orig && wrap.parentNode) wrap.parentNode.replaceChild(orig, wrap);
-          });
-          wrappersRef.current = [];
-        }
-        try {
-          splitRef.current?.revert();
-        } catch {}
-        splitRef.current = null;
+      const cancelPlayback = () => {
+        ambientCall?.kill();
+        ambientCall = null;
+        activeTimeline?.kill();
+        activeTimeline = null;
         playingRef.current = false;
+        restoreCharacters();
       };
 
-      const build = () => {
-        teardown();
+      const revertSplit = () => {
+        cancelPlayback();
+        splitRef.current?.revert();
+        splitRef.current = null;
+        chars = [];
+        originals.clear();
+      };
 
-        const computedFont = getComputedStyle(el).fontFamily;
-
+      const buildCharacters = () => {
+        revertSplit();
         splitRef.current = new GSAPSplitText(el, {
           type: 'chars',
           charsClass: 'shuffle-char',
           wordsClass: 'shuffle-word',
-          linesClass: 'shuffle-line',
           smartWrap: true,
           reduceWhiteSpace: false
         });
 
-        const chars = (splitRef.current.chars || []) as HTMLElement[];
-        wrappersRef.current = [];
-
-        const rolls = Math.max(1, Math.floor(shuffleTimes));
-        const rand = (set: string) => set.charAt(Math.floor(Math.random() * set.length)) || '';
-
-        chars.forEach(ch => {
-          const parent = ch.parentElement;
-          if (!parent) return;
-
-          const w = ch.getBoundingClientRect().width;
-          const h = ch.getBoundingClientRect().height;
-          if (!w) return;
-
-          const wrap = document.createElement('span');
-          wrap.className = 'inline-block overflow-hidden text-left';
-          Object.assign(wrap.style, {
-            width: w + 'px',
-            height: shuffleDirection === 'up' || shuffleDirection === 'down' ? h + 'px' : 'auto',
-            verticalAlign: 'bottom'
+        chars = ((splitRef.current.chars || []) as HTMLElement[]).filter(char =>
+          /[A-Za-z0-9]/.test(char.textContent || '')
+        );
+        chars.forEach(char => {
+          const original = char.textContent || '';
+          originals.set(char, original);
+          Object.assign(char.style, {
+            display: 'inline-block',
+            width: `${char.getBoundingClientRect().width}px`,
+            willChange: 'transform, opacity'
           });
-
-          const inner = document.createElement('span');
-          inner.className =
-            'inline-block will-change-transform origin-left transform-gpu ' +
-            (shuffleDirection === 'up' || shuffleDirection === 'down' ? 'whitespace-normal' : 'whitespace-nowrap');
-
-          parent.insertBefore(wrap, ch);
-          wrap.appendChild(inner);
-
-          const firstOrig = ch.cloneNode(true) as HTMLElement;
-          firstOrig.className =
-            'text-left ' + (shuffleDirection === 'up' || shuffleDirection === 'down' ? 'block' : 'inline-block');
-          Object.assign(firstOrig.style, { width: w + 'px', fontFamily: computedFont });
-
-          ch.setAttribute('data-orig', '1');
-          ch.className =
-            'text-left ' + (shuffleDirection === 'up' || shuffleDirection === 'down' ? 'block' : 'inline-block');
-          Object.assign(ch.style, { width: w + 'px', fontFamily: computedFont });
-
-          inner.appendChild(firstOrig);
-          for (let k = 0; k < rolls; k++) {
-            const c = ch.cloneNode(true) as HTMLElement;
-            if (scrambleCharset) c.textContent = rand(scrambleCharset);
-            c.className =
-              'text-left ' + (shuffleDirection === 'up' || shuffleDirection === 'down' ? 'block' : 'inline-block');
-            Object.assign(c.style, { width: w + 'px', fontFamily: computedFont });
-            inner.appendChild(c);
-          }
-          inner.appendChild(ch);
-
-          const steps = rolls + 1;
-
-          if (shuffleDirection === 'right' || shuffleDirection === 'down') {
-            const firstCopy = inner.firstElementChild as HTMLElement | null;
-            const real = inner.lastElementChild as HTMLElement | null;
-            if (real) inner.insertBefore(real, inner.firstChild);
-            if (firstCopy) inner.appendChild(firstCopy);
-          }
-
-          let startX = 0;
-          let finalX = 0;
-          let startY = 0;
-          let finalY = 0;
-
-          if (shuffleDirection === 'right') {
-            startX = -steps * w;
-            finalX = 0;
-          } else if (shuffleDirection === 'left') {
-            startX = 0;
-            finalX = -steps * w;
-          } else if (shuffleDirection === 'down') {
-            startY = -steps * h;
-            finalY = 0;
-          } else if (shuffleDirection === 'up') {
-            startY = 0;
-            finalY = -steps * h;
-          }
-
-          if (shuffleDirection === 'left' || shuffleDirection === 'right') {
-            gsap.set(inner, { x: startX, y: 0, force3D: true });
-            inner.setAttribute('data-start-x', String(startX));
-            inner.setAttribute('data-final-x', String(finalX));
-          } else {
-            gsap.set(inner, { x: 0, y: startY, force3D: true });
-            inner.setAttribute('data-start-y', String(startY));
-            inner.setAttribute('data-final-y', String(finalY));
-          }
-
-          if (colorFrom) (inner.style as any).color = colorFrom;
-          wrappersRef.current.push(wrap);
         });
       };
 
-      const inners = () => wrappersRef.current.map(w => w.firstElementChild as HTMLElement);
-
-      const randomizeScrambles = () => {
-        if (!scrambleCharset) return;
-        wrappersRef.current.forEach(w => {
-          const strip = w.firstElementChild as HTMLElement;
-          if (!strip) return;
-          const kids = Array.from(strip.children) as HTMLElement[];
-          for (let i = 1; i < kids.length - 1; i++) {
-            kids[i].textContent = scrambleCharset.charAt(Math.floor(Math.random() * scrambleCharset.length));
-          }
-        });
+      const shuffledGlyph = (original: string) => {
+        const charset = scrambleCharset || DEFAULT_CHARSET;
+        let glyph = original;
+        while (charset.length > 1 && glyph.toUpperCase() === original.toUpperCase()) {
+          glyph = charset.charAt(Math.floor(Math.random() * charset.length));
+        }
+        return original === original.toLowerCase() ? glyph.toLowerCase() : glyph;
       };
 
-      const cleanupToStill = () => {
-        wrappersRef.current.forEach(w => {
-          const strip = w.firstElementChild as HTMLElement;
-          if (!strip) return;
-          const real = strip.querySelector('[data-orig="1"]') as HTMLElement | null;
-          if (!real) return;
-          strip.replaceChildren(real);
-          strip.style.transform = 'none';
-          strip.style.willChange = 'auto';
-        });
+      const selectedCharacters = () => {
+        const ratio = gsap.utils.random(0.3, 0.55);
+        const count = chars.length < 3 ? 1 : Math.max(2, Math.round(chars.length * ratio));
+        return gsap.utils.shuffle(chars.slice()).slice(0, count);
       };
 
-      const play = () => {
-        const strips = inners();
-        if (!strips.length) return;
+      const directionalOffset = () => {
+        const amount = Math.min(5, Math.max(1.5, duration * 3));
+        if (shuffleDirection === 'left') return { x: -amount, y: 0 };
+        if (shuffleDirection === 'right') return { x: amount, y: 0 };
+        if (shuffleDirection === 'up') return { x: 0, y: -amount };
+        return { x: 0, y: amount };
+      };
+
+      const nextAmbientDelay = () => {
+        const base = Math.max(1.2, loopDelay || 2.8);
+        return base * gsap.utils.random(0.72, 1.32);
+      };
+
+      const scheduleAmbientPulse = () => {
+        if (!loop || disposed) return;
+        ambientCall?.kill();
+        ambientCall = gsap.delayedCall(nextAmbientDelay(), playPulse);
+      };
+
+      const playPulse = () => {
+        if (disposed || playingRef.current || chars.length === 0) return;
 
         playingRef.current = true;
-        const isVertical = shuffleDirection === 'up' || shuffleDirection === 'down';
+        ambientCall = null;
+        const selected = selectedCharacters();
+        const offset = directionalOffset();
+        const pulseDuration = Math.max(0.26, duration);
+        const scrambleSteps = Math.max(1, Math.min(3, Math.floor(shuffleTimes)));
+        const fadeTime = pulseDuration * 0.22;
+        const scrambleTime = pulseDuration * 0.14;
+        const settleTime = pulseDuration * 0.4;
+        const perCharTime = fadeTime + scrambleSteps * scrambleTime + settleTime;
+        const spreadWindow = Math.max(maxDelay, perCharTime * 0.5 * selected.length);
 
-        const tl = gsap.timeline({
-          smoothChildTiming: true,
-          repeat: loop ? -1 : 0,
-          repeatDelay: loop ? loopDelay : 0,
-          onRepeat: () => {
-            if (scrambleCharset) randomizeScrambles();
-            if (isVertical) {
-              gsap.set(strips, { y: (i: number, t: HTMLElement) => parseFloat(t.getAttribute('data-start-y') || '0') });
-            } else {
-              gsap.set(strips, { x: (i: number, t: HTMLElement) => parseFloat(t.getAttribute('data-start-x') || '0') });
-            }
-            onShuffleComplete?.();
-          },
+        activeTimeline = gsap.timeline({
           onComplete: () => {
+            selected.forEach(char => {
+              char.textContent = originals.get(char) ?? '';
+            });
             playingRef.current = false;
-            if (!loop) {
-              cleanupToStill();
-              if (colorTo) gsap.set(strips, { color: colorTo });
-              onShuffleComplete?.();
-              armHover();
-            }
+            activeTimeline = null;
+            onShuffleComplete?.();
+            scheduleAmbientPulse();
           }
         });
 
-        const addTween = (targets: HTMLElement[], at: number) => {
-          const vars: gsap.TweenVars = {
-            duration,
-            ease,
-            force3D: true,
-            stagger: animationMode === 'evenodd' ? stagger : 0
-          };
-          if (isVertical) {
-            vars.y = (i: number, t: HTMLElement) => parseFloat(t.getAttribute('data-final-y') || '0');
-          } else {
-            vars.x = (i: number, t: HTMLElement) => parseFloat(t.getAttribute('data-final-x') || '0');
+        selected.forEach((char) => {
+          const original = originals.get(char) ?? '';
+          const startAt = Math.random() * spreadWindow;
+
+          if (colorFrom) activeTimeline?.set(char, { color: colorFrom }, startAt);
+          activeTimeline?.to(
+            char,
+            { opacity: 0.55, x: offset.x, y: offset.y, duration: fadeTime, ease: 'power2.inOut' },
+            startAt
+          );
+
+          for (let step = 0; step < scrambleSteps; step += 1) {
+            const at = startAt + fadeTime + step * scrambleTime;
+            activeTimeline?.call(() => {
+              char.textContent = shuffledGlyph(original);
+            }, undefined, at);
+            activeTimeline?.to(
+              char,
+              { opacity: 0.7, x: -offset.x * 0.3, y: -offset.y * 0.3, duration: scrambleTime, ease: 'power2.inOut' },
+              at
+            );
           }
 
-          tl.to(targets, vars, at);
-
-          if (colorFrom && colorTo) tl.to(targets, { color: colorTo, duration, ease }, at);
-        };
-
-        if (animationMode === 'evenodd') {
-          const odd = strips.filter((_, i) => i % 2 === 1);
-          const even = strips.filter((_, i) => i % 2 === 0);
-          const oddTotal = duration + Math.max(0, odd.length - 1) * stagger;
-          const evenStart = odd.length ? oddTotal * 0.7 : 0;
-          if (odd.length) addTween(odd, 0);
-          if (even.length) addTween(even, evenStart);
-        } else {
-          strips.forEach(strip => {
-            const d = Math.random() * maxDelay;
-            const vars: gsap.TweenVars = {
-              duration,
-              ease,
-              force3D: true
-            };
-            if (isVertical) {
-              vars.y = parseFloat(strip.getAttribute('data-final-y') || '0');
-            } else {
-              vars.x = parseFloat(strip.getAttribute('data-final-x') || '0');
-            }
-            tl.to(strip, vars, d);
-            if (colorFrom && colorTo) tl.fromTo(strip, { color: colorFrom }, { color: colorTo, duration, ease }, d);
-          });
-        }
-
-        tlRef.current = tl;
+          const settleAt = startAt + fadeTime + scrambleSteps * scrambleTime;
+          activeTimeline?.call(() => {
+            char.textContent = original;
+          }, undefined, settleAt);
+          activeTimeline?.to(
+            char,
+            { opacity: 1, x: 0, y: 0, color: colorTo, duration: settleTime, ease },
+            settleAt
+          );
+        });
       };
 
-      const armHover = () => {
-        if (!triggerOnHover || !ref.current) return;
-        removeHover();
-        const handler = () => {
-          if (playingRef.current) return;
-          build();
-          if (scrambleCharset) randomizeScrambles();
-          play();
-        };
-        hoverHandlerRef.current = handler;
-        ref.current.addEventListener('mouseenter', handler);
-      };
-
-      const create = () => {
-        build();
-        if (scrambleCharset) randomizeScrambles();
-        play();
-        armHover();
+      const startPlayback = () => {
+        cancelPlayback();
+        buildCharacters();
         setReady(true);
+        playPulse();
       };
 
-      const st = ScrollTrigger.create({
+      const onMouseEnter = () => {
+        if (!playingRef.current) {
+          ambientCall?.kill();
+          ambientCall = null;
+          playPulse();
+        }
+      };
+
+      if (triggerOnHover) el.addEventListener('mouseenter', onMouseEnter);
+
+      const scrollTrigger = ScrollTrigger.create({
         trigger: el,
-        start,
+        start: scrollTriggerStart,
         once: triggerOnce,
-        onEnter: create
+        onEnter: startPlayback
       });
 
       return () => {
-        st.kill();
-        removeHover();
-        teardown();
+        disposed = true;
+        scrollTrigger.kill();
+        el.removeEventListener('mouseenter', onMouseEnter);
+        revertSplit();
         setReady(false);
       };
     },
@@ -378,7 +298,6 @@ const Shuffle: React.FC<ShuffleProps> = ({
         fontsLoaded,
         shuffleDirection,
         shuffleTimes,
-        animationMode,
         loop,
         loopDelay,
         stagger,
@@ -396,12 +315,10 @@ const Shuffle: React.FC<ShuffleProps> = ({
 
   const baseTw = 'inline-block whitespace-normal break-words will-change-transform uppercase text-2xl leading-none';
   const userHasFont = useMemo(() => className && /font[-[]/i.test(className), [className]);
-
   const fallbackFont = useMemo(
     () => (userHasFont ? {} : { fontFamily: `'Press Start 2P', sans-serif` }),
     [userHasFont]
   );
-
   const commonStyle = useMemo(
     () => ({
       textAlign,
@@ -410,14 +327,33 @@ const Shuffle: React.FC<ShuffleProps> = ({
     }),
     [textAlign, fallbackFont, style]
   );
-
   const classes = useMemo(
     () => `${baseTw} ${ready ? 'visible' : 'invisible'} ${className}`.trim(),
     [baseTw, ready, className]
   );
-  const Tag = (tag || 'p') as keyof JSX.IntrinsicElements;
+  const setElementRef = useCallback((element: HTMLElement | null) => {
+    ref.current = element;
+  }, []);
+  const elementProps = { ref: setElementRef, className: classes, style: commonStyle };
 
-  return React.createElement(Tag, { ref: ref as any, className: classes, style: commonStyle }, text);
+  switch (tag) {
+    case 'h1':
+      return <h1 {...elementProps}>{text}</h1>;
+    case 'h2':
+      return <h2 {...elementProps}>{text}</h2>;
+    case 'h3':
+      return <h3 {...elementProps}>{text}</h3>;
+    case 'h4':
+      return <h4 {...elementProps}>{text}</h4>;
+    case 'h5':
+      return <h5 {...elementProps}>{text}</h5>;
+    case 'h6':
+      return <h6 {...elementProps}>{text}</h6>;
+    case 'span':
+      return <span {...elementProps}>{text}</span>;
+    default:
+      return <p {...elementProps}>{text}</p>;
+  }
 };
 
 export default Shuffle;
