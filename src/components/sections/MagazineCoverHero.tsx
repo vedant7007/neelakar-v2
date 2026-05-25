@@ -78,6 +78,20 @@ export default function MagazineCoverHero() {
     letterSpacing: '0.04em',
   }
 
+  const shuffleProps = {
+    tag: 'span' as const,
+    shuffleDirection: 'up' as const,
+    animationMode: 'random' as const,
+    maxDelay: 1.2,
+    duration: 0.8,
+    ease: 'power3.out',
+    shuffleTimes: 1,
+    loop: true,
+    triggerOnce: false,
+    triggerOnHover: false,
+    rootMargin: '0px',
+  }
+
   return (
     <div
       ref={containerRef}
@@ -95,7 +109,6 @@ export default function MagazineCoverHero() {
             resolution={0.5}
             iterationsPoisson={18}
             iterationsViscous={18}
-            isBounce
             autoDemo={false}
             autoSpeed={0}
             autoIntensity={0}
@@ -173,19 +186,9 @@ export default function MagazineCoverHero() {
         <div style={{ marginBottom: '0.5em' }}>
           <Shuffle
             text="HONORING THE CRAFT"
-            tag="span"
+            {...shuffleProps}
             textAlign="left"
-            shuffleDirection="up"
-            animationMode="evenodd"
-            stagger={0.04}
-            duration={0.5}
-            ease="power2.out"
-            shuffleTimes={1}
-            loop
             loopDelay={6}
-            triggerOnce={false}
-            triggerOnHover={false}
-            rootMargin="0px"
             style={{ ...shuffleBaseStyle, color: TITLE_RED }}
             className="font-[inherit] !leading-[1.2]"
           />
@@ -204,19 +207,9 @@ export default function MagazineCoverHero() {
         <div style={{ marginBottom: '0.5em' }}>
           <Shuffle
             text="THE ARCHITECTURE OF ADORNMENT"
-            tag="span"
+            {...shuffleProps}
             textAlign="left"
-            shuffleDirection="up"
-            animationMode="evenodd"
-            stagger={0.04}
-            duration={0.5}
-            ease="power2.out"
-            shuffleTimes={1}
-            loop
             loopDelay={7}
-            triggerOnce={false}
-            triggerOnHover={false}
-            rootMargin="0px"
             style={{ ...shuffleBaseStyle, color: TITLE_RED }}
             className="font-[inherit] !leading-[1.2]"
           />
@@ -235,19 +228,9 @@ export default function MagazineCoverHero() {
         <div style={{ marginBottom: '0.4em' }}>
           <Shuffle
             text="THE NEELAKAR EDITION"
-            tag="span"
+            {...shuffleProps}
             textAlign="right"
-            shuffleDirection="up"
-            animationMode="evenodd"
-            stagger={0.04}
-            duration={0.5}
-            ease="power2.out"
-            shuffleTimes={1}
-            loop
             loopDelay={6.5}
-            triggerOnce={false}
-            triggerOnHover={false}
-            rootMargin="0px"
             style={{ ...shuffleBaseStyle, color: GOLD }}
             className="font-[inherit] !leading-[1.2]"
           />
@@ -266,19 +249,9 @@ export default function MagazineCoverHero() {
         <div style={{ marginBottom: '0.5em' }}>
           <Shuffle
             text="A CONVERSATION IN LIGHT"
-            tag="span"
+            {...shuffleProps}
             textAlign="right"
-            shuffleDirection="up"
-            animationMode="evenodd"
-            stagger={0.04}
-            duration={0.5}
-            ease="power2.out"
-            shuffleTimes={1}
-            loop
             loopDelay={7}
-            triggerOnce={false}
-            triggerOnHover={false}
-            rootMargin="0px"
             style={{ ...shuffleBaseStyle, color: GOLD }}
             className="font-[inherit] !leading-[1.2]"
           />
