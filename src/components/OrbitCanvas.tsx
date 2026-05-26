@@ -50,11 +50,12 @@ export default function OrbitCanvas({ images }: OrbitCanvasProps) {
       const w = canvas.width
       const h = canvas.height
       const cx = w / 2
-      const cy = h * 0.47
-      const rx = Math.min(w * 0.28, 460 * dpr)
-      const ry = rx * 0.34
-      const thumbW = 36 * dpr
-      const thumbH = 46 * dpr
+      const cy = h / 2
+      const radius = Math.min(w, h) * 0.42
+      const rx = radius
+      const ry = radius
+      const thumbW = 32 * dpr
+      const thumbH = 40 * dpr
       const n = items.length
 
       mouseX += (targetMouseX - mouseX) * 0.04
