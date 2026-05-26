@@ -21,7 +21,7 @@ export default function Navbar() {
   const pathname = usePathname()
   const [show, setShow] = useState(false)
   const isHome = pathname === '/'
-  const hide = pathname === '/create-with-us'
+  const hide = pathname === '/create-with-us' || pathname?.startsWith('/production/')
 
   useEffect(() => {
     if (hide) return
