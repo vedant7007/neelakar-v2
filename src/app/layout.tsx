@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { DM_Sans, Playfair_Display, Cormorant_Garamond } from "next/font/google";
+import { SITE_URL } from "@/lib/site";
 import "./globals.css";
 
 const dmSans = DM_Sans({
@@ -25,7 +26,6 @@ const cormorant = Cormorant_Garamond({
   display: "swap",
 });
 
-const SITE_URL = "https://neelakar-v2.vercel.app"
 const TITLE = "Neelakar Creative House | Best Creative Studio in Hyderabad — Branding, Film & Campaigns"
 const DESCRIPTION =
   "Neelakar Creative House is Hyderabad's premier luxury creative studio. We specialise in brand identity, cinematic campaigns, editorial photography, film production, and visual storytelling for fashion, jewellery, and prestige brands across India."

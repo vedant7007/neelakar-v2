@@ -1,4 +1,5 @@
 import { ImageResponse } from "next/og"
+import { ASSET_ORIGIN } from "@/lib/site"
 
 export const runtime = "edge"
 export const alt = "Neelakar Creative House — Luxury Creative Studio"
@@ -43,7 +44,7 @@ export default async function TwitterImage() {
         >
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
-            src="https://neelakar-v2.vercel.app/NCH_logo_white.png"
+            src={`${ASSET_ORIGIN}/NCH_logo_white.png`}
             alt=""
             width={140}
             height={140}
