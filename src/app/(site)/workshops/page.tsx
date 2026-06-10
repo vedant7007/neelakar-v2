@@ -1,19 +1,19 @@
 import type { Metadata } from 'next'
 import { db } from '@/lib/db'
-import { workshops } from '@/lib/db/schema'
-import { eq, asc } from 'drizzle-orm'
-import WorkshopsClient, { type PublicWorkshop } from '@/components/WorkshopsClient'
+import { workshops, testimonials } from '@/lib/db/schema'
+import { eq, and, asc } from 'drizzle-orm'
+import WorkshopsClient, { type PublicWorkshop, type WorkshopReview } from '@/components/WorkshopsClient'
 
 export const dynamic = 'force-dynamic'
 
 export const metadata: Metadata = {
   title: 'Workshops — Neelakar Creative House',
   description:
-    'Hands-on photography, videography, and branding workshops by Neelakar Creative House. Learn the craft from working professionals.',
+    'Hands-on photography, videography, and branding workshops by Neelakar Creative House. Learn the craft from working professionals in small cohorts.',
   openGraph: {
     title: 'Workshops — Neelakar Creative House',
     description:
-      'Hands-on photography, videography, and branding workshops. Learn the craft from working professionals.',
+      'Hands-on photography, videography, and branding workshops. Learn the craft from working professionals in small cohorts.',
   },
 }
 
@@ -34,6 +34,8 @@ export default async function WorkshopsPage({
   const { preview } = await searchParams
 
   let items: PublicWorkshop[] = []
+  let review: WorkshopReview | null = null
+
   try {
     const rows = await db
       .select()
@@ -59,7 +61,20 @@ export default async function WorkshopsPage({
     console.error('Failed to load workshops:', err)
   }
 
+  // Featured review is admin-controlled: any active testimonial with context "workshop"
+  try {
+    const [t] = await db
+      .select()
+      .from(testimonials)
+      .where(and(eq(testimonials.context, 'workshop'), eq(testimonials.isActive, true)))
+      .orderBy(asc(testimonials.sortOrder))
+      .limit(1)
+    if (t) review = { quote: t.quote, authorName: t.authorName, authorRole: t.authorRole }
+  } catch (err) {
+    console.error('Failed to load workshop review:', err)
+  }
+
   if (items.length === 0 && preview === '1') items = PREVIEW
 
-  return <WorkshopsClient workshops={items} />
+  return <WorkshopsClient workshops={items} review={review} />
 }
