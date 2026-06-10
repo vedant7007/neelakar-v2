@@ -125,7 +125,7 @@ src/
     └── validators/             # Zod schemas
 ```
 
-See `HANDOFF.md` for a deeper architecture walkthrough and `PROJECT_STATUS.md` for what's done / what needs client input.
+**New here? Read [`docs/DEVELOPER_GUIDE.md`](docs/DEVELOPER_GUIDE.md) first** — the single combined reference for the whole codebase. See also `HANDOFF.md` (architecture notes) and `PROJECT_STATUS.md` (what's done / what needs client input).
 
 ---
 
