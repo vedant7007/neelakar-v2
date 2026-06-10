@@ -27,11 +27,20 @@ export async function updateSession(request: NextRequest) {
 
   const { data: { user } } = await supabase.auth.getUser()
 
-  const isAdminRoute = request.nextUrl.pathname.startsWith('/admin')
+  const pathname = request.nextUrl.pathname
+  const isAdminRoute = pathname.startsWith('/admin')
+  const isLoginRoute = pathname === '/admin/login'
 
-  if (isAdminRoute && !user) {
+  if (isAdminRoute && !isLoginRoute && !user) {
     const url = request.nextUrl.clone()
-    url.pathname = '/'
+    url.pathname = '/admin/login'
+    return NextResponse.redirect(url)
+  }
+
+  // Already signed in — skip the login screen
+  if (isLoginRoute && user) {
+    const url = request.nextUrl.clone()
+    url.pathname = '/admin'
     return NextResponse.redirect(url)
   }
 

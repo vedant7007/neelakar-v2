@@ -15,7 +15,7 @@ const NUSRAT = "'Nusrat', cursive"
 
 const CAMPAIGNS = [
   {
-    image: 'https://images.unsplash.com/photo-1469334031218-e382a71b716b?w=1600&h=900&fit=crop&q=85',
+    image: 'https://picsum.photos/id/1011/1600/900',
     label: 'FASHION EDITORIAL',
     headline1: 'The Art of',
     headline2: 'Draping',
@@ -24,7 +24,7 @@ const CAMPAIGNS = [
     tags: ['Direction', 'Photography', 'Styling'],
   },
   {
-    image: 'https://images.unsplash.com/photo-1558171813-4c088753af8f?w=1600&h=900&fit=crop&q=85',
+    image: 'https://picsum.photos/id/1027/1600/900',
     label: 'JEWELLERY CAMPAIGN',
     headline1: 'Heritage in',
     headline2: 'Every Stone',
@@ -33,7 +33,7 @@ const CAMPAIGNS = [
     tags: ['Campaign', 'Film', 'Post'],
   },
   {
-    image: 'https://images.unsplash.com/photo-1617038220319-276d3cfab638?w=1600&h=900&fit=crop&q=85',
+    image: 'https://picsum.photos/id/1031/1600/900',
     label: 'BRAND IDENTITY',
     headline1: 'Building',
     headline2: 'Visual Worlds',
@@ -42,7 +42,7 @@ const CAMPAIGNS = [
     tags: ['Strategy', 'Identity', 'Systems'],
   },
   {
-    image: 'https://images.unsplash.com/photo-1490725263030-1f0521cec8ec?w=1600&h=900&fit=crop&q=85',
+    image: 'https://picsum.photos/id/1035/1600/900',
     label: 'FILM PRODUCTION',
     headline1: 'Frames That',
     headline2: 'Linger',

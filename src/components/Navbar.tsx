@@ -14,6 +14,7 @@ const SANS = "var(--font-dm-sans), 'DM Sans', sans-serif"
 
 const LINKS = [
   { label: 'Production', href: '/production' },
+  { label: 'Workshops', href: '/workshops' },
   { label: 'Create With Us', href: '/create-with-us' },
 ]
 

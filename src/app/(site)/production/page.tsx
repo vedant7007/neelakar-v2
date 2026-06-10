@@ -343,7 +343,7 @@ export default function ProductionPage() {
             rootMargin="0px"
             style={{
               fontFamily: DISPLAY,
-              fontSize: 'clamp(3.5rem, 10vw, 10rem)',
+              fontSize: 'clamp(2.4rem, 10vw, 10rem)',
               fontWeight: 300,
               fontStyle: 'italic',
               color: '#fff',

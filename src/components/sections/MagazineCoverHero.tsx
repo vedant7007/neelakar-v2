@@ -124,7 +124,7 @@ export default function MagazineCoverHero() {
         className="absolute inset-x-0 z-[2] text-center pointer-events-none select-none"
         style={{
           fontFamily: DISPLAY,
-          fontSize: 'clamp(4.5rem, 12vw, 14rem)',
+          fontSize: 'clamp(2.6rem, 12vw, 14rem)',
           fontWeight: 900,
           lineHeight: 0.85,
           letterSpacing: '0.04em',
@@ -183,7 +183,7 @@ export default function MagazineCoverHero() {
       <div
         ref={leftTopRef}
         className="absolute z-[5] pointer-events-none left-[clamp(1.5rem,4vw,4rem)] top-[clamp(11rem,30vh,25rem)]"
-        style={{ maxWidth: 'clamp(180px, 18vw, 260px)', willChange: 'transform, opacity' }}
+        style={{ maxWidth: 'clamp(140px, 38vw, 260px)', willChange: 'transform, opacity' }}
       >
         <div style={{ marginBottom: '0.5em' }}>
           <Shuffle
@@ -203,7 +203,7 @@ export default function MagazineCoverHero() {
       {/* LEFT-BOTTOM */}
       <div
         ref={leftBotRef}
-        className="absolute z-[5] pointer-events-none left-[clamp(1.5rem,4vw,4rem)] bottom-[clamp(5rem,14vh,11rem)]"
+        className="absolute z-[5] pointer-events-none left-[clamp(1.5rem,4vw,4rem)] bottom-[clamp(5rem,14vh,11rem)] hidden md:block"
         style={{ maxWidth: 'clamp(180px, 18vw, 260px)', willChange: 'transform, opacity' }}
       >
         <div style={{ marginBottom: '0.5em' }}>
@@ -225,7 +225,7 @@ export default function MagazineCoverHero() {
       <div
         ref={rightTopRef}
         className="absolute z-[5] pointer-events-none right-[clamp(1.5rem,4vw,4rem)] top-[clamp(11rem,30vh,25rem)]"
-        style={{ maxWidth: 'clamp(180px, 18vw, 260px)', textAlign: 'right', willChange: 'transform, opacity' }}
+        style={{ maxWidth: 'clamp(140px, 38vw, 260px)', textAlign: 'right', willChange: 'transform, opacity' }}
       >
         <div style={{ marginBottom: '0.4em' }}>
           <Shuffle
@@ -245,7 +245,7 @@ export default function MagazineCoverHero() {
       {/* RIGHT-BOTTOM */}
       <div
         ref={rightBotRef}
-        className="absolute z-[5] pointer-events-none right-[clamp(1.5rem,4vw,4rem)] bottom-[clamp(5rem,10vh,8rem)]"
+        className="absolute z-[5] pointer-events-none right-[clamp(1.5rem,4vw,4rem)] bottom-[clamp(5rem,10vh,8rem)] hidden md:block"
         style={{ maxWidth: 'clamp(180px, 18vw, 260px)', textAlign: 'right', willChange: 'transform, opacity' }}
       >
         <div style={{ marginBottom: '0.5em' }}>

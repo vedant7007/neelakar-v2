@@ -12,10 +12,10 @@ const DISPLAY = "var(--font-neel-display), 'Playfair Display', serif"
 const NUSRAT = "'Nusrat', cursive"
 
 const ACT_IMAGES = [
-  'https://images.unsplash.com/photo-1509631179647-0177331693ae?w=1200&h=1800&fit=crop&q=85',
-  'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=1200&h=1800&fit=crop&q=85',
-  'https://images.unsplash.com/photo-1470723710355-95304d8aece4?w=1200&h=1800&fit=crop&q=85',
-  'https://images.unsplash.com/photo-1534796636912-3b95b3ab5986?w=1200&h=1800&fit=crop&q=85',
+  'https://picsum.photos/id/1062/1200/1800',
+  'https://picsum.photos/id/1059/1200/1800',
+  'https://picsum.photos/id/1041/1200/1800',
+  'https://picsum.photos/id/1050/1200/1800',
 ]
 
 const ACTS = [

@@ -23,6 +23,7 @@ const FOOTER_LINKS = [
   { text: 'Production', href: '/production' },
   { text: 'Photography', href: '/production/photography' },
   { text: 'Films', href: '/production/videography' },
+  { text: 'Workshops', href: '/workshops' },
   { text: 'Inquire', href: '/create-with-us' },
 ]
 

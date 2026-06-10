@@ -76,11 +76,16 @@ export default function OrbitCanvas({ images, backgrounds }: OrbitCanvasProps) {
       const h = canvas.height
       const cx = w / 2
       const cy = h / 2
-      const radius = Math.min(w, h) * 0.42
-      const rx = radius
-      const ry = radius
       const thumbW = 60 * dpr
       const thumbH = 75 * dpr
+      // Keep the full thumbnail (plus glow) inside the viewport on narrow screens
+      const radius = Math.min(
+        Math.min(w, h) * 0.42,
+        w / 2 - thumbW * 0.5 - 14 * dpr,
+        h / 2 - thumbH * 0.5 - 14 * dpr,
+      )
+      const rx = radius
+      const ry = radius
       const n = items.length
 
       mouseX += (targetMouseX - mouseX) * 0.04
