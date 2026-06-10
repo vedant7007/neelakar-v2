@@ -1,6 +1,10 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect, useLayoutEffect, useRef, useMemo } from 'react'
+import gsap from 'gsap'
+import { ScrollTrigger } from 'gsap/ScrollTrigger'
+
+gsap.registerPlugin(ScrollTrigger)
 
 const GOLD = '#C8A96E'
 const DISPLAY = "var(--font-neel-display), 'Playfair Display', serif"
@@ -24,7 +28,22 @@ export interface PublicWorkshop {
 }
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+const LEVEL_RANK: Record<string, number> = { Beginner: 1, Intermediate: 2, Advanced: 3 }
+const ROMAN = '·  MMXXVI'
 
+function LevelDots({ level }: { level: string }) {
+  const n = LEVEL_RANK[level] ?? 0
+  return (
+    <span className="wk-level" title={level} aria-label={`Level: ${level}`}>
+      {[1, 2, 3].map((i) => (
+        <span key={i} className="wk-dot" data-on={i <= n} />
+      ))}
+      <span className="wk-level-label">{level}</span>
+    </span>
+  )
+}
+
+/* ── Registration form, revealed inside an expanding row ── */
 function RegisterForm({ workshop, onDone }: { workshop: PublicWorkshop; onDone: () => void }) {
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
@@ -60,64 +79,32 @@ function RegisterForm({ workshop, onDone }: { workshop: PublicWorkshop; onDone: 
 
   if (success) {
     return (
-      <div className="pt-6 pb-2">
-        <p style={{ fontFamily: DISPLAY, fontSize: 'clamp(1.1rem, 1.4vw, 1.4rem)', fontStyle: 'italic', fontWeight: 300, color: '#fff' }}>
-          You&rsquo;re in. <span style={{ fontFamily: NUSRAT, color: GOLD }}>see you there.</span>
+      <div className="wk-success">
+        <p className="wk-success-line">
+          Your seat is held. <span className="wk-cursive">see you in the room.</span>
         </p>
-        <p className="mt-2" style={{ fontFamily: SANS, fontSize: '0.8rem', fontWeight: 300, color: 'rgba(255,255,255,0.4)' }}>
-          A confirmation is on its way to your inbox.
-        </p>
-        <button onClick={onDone} className="mt-4" style={{
-          fontFamily: SANS, fontSize: '0.62rem', fontWeight: 600, color: GOLD, letterSpacing: '0.25em',
-          textTransform: 'uppercase', background: 'none', border: 'none', cursor: 'pointer', padding: 0,
-        }}>
-          Close
-        </button>
+        <p className="wk-success-sub">A confirmation is on its way to your inbox.</p>
+        <button onClick={onDone} className="wk-text-link">Close</button>
       </div>
     )
   }
 
-  const inputStyle = {
-    fontFamily: SANS, fontSize: '0.95rem', fontWeight: 300, color: '#fff',
-  } as const
-
   return (
-    <form onSubmit={submit} className="pt-6 pb-2 grid grid-cols-1 md:grid-cols-3 gap-5">
-      <input
-        value={name} onChange={e => setName(e.target.value)} placeholder="Your name"
-        className="bg-transparent pb-3 outline-none border-b border-white/10 focus:border-[#C8A96E] transition-colors placeholder:text-white/20"
-        style={inputStyle}
-      />
-      <input
-        type="email" value={email} onChange={e => setEmail(e.target.value)} placeholder="Email"
-        className="bg-transparent pb-3 outline-none border-b border-white/10 focus:border-[#C8A96E] transition-colors placeholder:text-white/20"
-        style={inputStyle}
-      />
-      <input
-        value={phone} onChange={e => setPhone(e.target.value)} placeholder="Phone (optional)"
-        className="bg-transparent pb-3 outline-none border-b border-white/10 focus:border-[#C8A96E] transition-colors placeholder:text-white/20"
-        style={inputStyle}
-      />
-      <div className="md:col-span-3 flex items-center gap-6 flex-wrap">
-        <button
-          type="submit" disabled={sending}
-          className="group relative overflow-hidden px-8 py-3.5 transition-all duration-300"
-          style={{
-            fontFamily: SANS, fontSize: '0.62rem', fontWeight: 600, letterSpacing: '0.3em',
-            textTransform: 'uppercase', backgroundColor: 'transparent', color: GOLD,
-            border: '1px solid rgba(200,169,110,0.35)',
-            cursor: sending ? 'wait' : 'pointer', opacity: sending ? 0.6 : 1,
-          }}
-        >
-          <span className="relative z-10 transition-colors duration-400 group-hover:text-[#060F0B]">
-            {sending ? 'Reserving…' : 'Reserve my spot'}
-          </span>
-          <span className="absolute inset-0 origin-left scale-x-0 group-hover:scale-x-100 transition-transform duration-500 ease-out"
-            style={{ backgroundColor: GOLD }} />
+    <form onSubmit={submit} className="wk-form">
+      <div className="wk-field" style={{ animationDelay: '0.05s' }}>
+        <input value={name} onChange={(e) => setName(e.target.value)} placeholder="Your name" aria-label="Your name" />
+      </div>
+      <div className="wk-field" style={{ animationDelay: '0.12s' }}>
+        <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="Email" aria-label="Email" />
+      </div>
+      <div className="wk-field" style={{ animationDelay: '0.19s' }}>
+        <input value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="Phone (optional)" aria-label="Phone" />
+      </div>
+      <div className="wk-form-actions" style={{ animationDelay: '0.26s' }}>
+        <button type="submit" disabled={sending} className="wk-submit">
+          <span>{sending ? 'Reserving…' : 'Reserve my spot'}</span>
         </button>
-        {error && (
-          <p style={{ fontFamily: SANS, fontSize: '0.78rem', color: 'rgba(220,120,100,0.85)' }}>{error}</p>
-        )}
+        {error && <p className="wk-error">{error}</p>}
       </div>
     </form>
   )
@@ -125,149 +112,418 @@ function RegisterForm({ workshop, onDone }: { workshop: PublicWorkshop; onDone: 
 
 export default function WorkshopsClient({ workshops }: { workshops: PublicWorkshop[] }) {
   const [openId, setOpenId] = useState<string | null>(null)
+  const [filter, setFilter] = useState('All')
+  const rootRef = useRef<HTMLElement>(null)
+
+  const categories = useMemo(
+    () => ['All', ...Array.from(new Set(workshops.map((w) => w.category)))],
+    [workshops],
+  )
+  const visible = useMemo(
+    () => (filter === 'All' ? workshops : workshops.filter((w) => w.category === filter)),
+    [filter, workshops],
+  )
+  const hasWorkshops = workshops.length > 0
+
+  /* Hero load — masked line reveal, staggered meta */
+  useLayoutEffect(() => {
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    if (reduce) return
+    const ctx = gsap.context(() => {
+      gsap.set('.wk-line > span', { yPercent: 115 })
+      const tl = gsap.timeline({ defaults: { ease: 'power4.out' } })
+      tl.to('.wk-line > span', { yPercent: 0, duration: 1.1, stagger: 0.1 }, 0.15)
+        .from('.wk-eyebrow', { opacity: 0, y: 18, duration: 0.9 }, 0)
+        .from('.wk-accent', { opacity: 0, y: 14, duration: 0.9 }, 0.55)
+        .from('.wk-lead', { opacity: 0, y: 18, duration: 0.9 }, 0.65)
+        .from('.wk-hero-foot', { opacity: 0, y: 14, duration: 0.9 }, 0.78)
+    }, rootRef)
+    return () => ctx.revert()
+  }, [])
+
+  /* Row reveal on scroll + numeral parallax — re-runs when the filtered set changes */
+  useEffect(() => {
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    const root = rootRef.current
+    if (!root) return
+
+    const rows = Array.from(root.querySelectorAll<HTMLElement>('.wk-row'))
+    const io = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((e) => {
+          if (e.isIntersecting) {
+            e.target.classList.add('in')
+            io.unobserve(e.target)
+          }
+        })
+      },
+      { threshold: 0.12, rootMargin: '0px 0px -8% 0px' },
+    )
+    rows.forEach((r) => io.observe(r))
+
+    let ctx: gsap.Context | undefined
+    if (!reduce) {
+      ctx = gsap.context(() => {
+        gsap.utils.toArray<HTMLElement>('.wk-num').forEach((num) => {
+          gsap.fromTo(
+            num,
+            { yPercent: 12 },
+            {
+              yPercent: -12,
+              ease: 'none',
+              scrollTrigger: {
+                trigger: num.closest('.wk-row'),
+                start: 'top bottom',
+                end: 'bottom top',
+                scrub: 1,
+              },
+            },
+          )
+        })
+      }, rootRef)
+      ScrollTrigger.refresh()
+    }
+
+    return () => {
+      io.disconnect()
+      ctx?.revert()
+    }
+  }, [visible])
 
   return (
-    <main className="min-h-screen" style={{ backgroundColor: '#060F0B' }}>
-      {/* Hero */}
-      <section className="px-6 md:px-14 lg:px-24 pt-36 md:pt-44 pb-16 md:pb-24">
-        <div className="flex items-center gap-4 mb-7">
-          <div className="h-px w-8" style={{ backgroundColor: GOLD, opacity: 0.3 }} />
-          <span style={{
-            fontFamily: SANS, fontSize: 'clamp(0.55rem, 0.62vw, 0.65rem)', fontWeight: 600,
-            color: GOLD, letterSpacing: '0.45em', textTransform: 'uppercase',
-          }}>
-            Learn with us
-          </span>
-        </div>
-        <h1 style={{
-          fontFamily: DISPLAY, fontSize: 'clamp(2.8rem, 7vw, 6.5rem)', fontWeight: 300,
-          fontStyle: 'italic', color: '#fff', lineHeight: 1.05, letterSpacing: '-0.02em',
-        }}>
-          Workshops
-        </h1>
-        <p className="mt-6 max-w-xl" style={{
-          fontFamily: SANS, fontSize: 'clamp(0.9rem, 1vw, 1.05rem)', fontWeight: 300,
-          color: 'rgba(255,255,255,0.45)', lineHeight: 1.8,
-        }}>
-          Small rooms, working professionals, real craft. Photography, film, and brand —
-          taught the way we practice it.
-        </p>
-      </section>
+    <main ref={rootRef} className="wk-root">
+      <style>{`
+        .wk-root {
+          position: relative;
+          min-height: 100vh;
+          background:
+            radial-gradient(1200px 700px at 12% -8%, rgba(200,169,110,0.10), transparent 60%),
+            radial-gradient(900px 600px at 95% 8%, rgba(200,169,110,0.05), transparent 55%),
+            #060F0B;
+          overflow: hidden;
+        }
+        /* Film grain */
+        .wk-grain {
+          position: fixed; inset: 0; z-index: 1; pointer-events: none; opacity: 0.5;
+          mix-blend-mode: soft-light;
+          background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.35'/%3E%3C/svg%3E");
+        }
+        .wk-content { position: relative; z-index: 2; }
 
-      {/* List */}
-      <section className="px-6 md:px-14 lg:px-24 pb-32">
-        {workshops.length === 0 ? (
-          <div className="py-20 border-t" style={{ borderColor: 'rgba(255,255,255,0.06)' }}>
-            <p style={{
-              fontFamily: DISPLAY, fontSize: 'clamp(1.2rem, 1.6vw, 1.6rem)', fontWeight: 300,
-              fontStyle: 'italic', color: 'rgba(255,255,255,0.5)',
-            }}>
-              The next season is being written.
-            </p>
-            <p className="mt-3" style={{ fontFamily: SANS, fontSize: '0.85rem', fontWeight: 300, color: 'rgba(255,255,255,0.3)' }}>
-              New workshops are announced on{' '}
-              <a href="https://www.instagram.com/neelakar_house" target="_blank" rel="noopener noreferrer"
-                style={{ color: GOLD, textDecoration: 'none' }}>@Neelakar_House</a> first.
-            </p>
+        /* ── HERO ── */
+        .wk-hero {
+          padding: clamp(8.5rem, 18vh, 13rem) clamp(1.5rem, 6vw, 7rem) clamp(3rem, 7vh, 6rem);
+          max-width: 1500px; margin: 0 auto;
+        }
+        .wk-eyebrow {
+          display: flex; align-items: center; gap: 1rem; margin-bottom: clamp(1.8rem, 4vh, 3rem);
+          font-family: ${SANS}; font-size: clamp(0.55rem, 0.65vw, 0.68rem); font-weight: 600;
+          color: ${GOLD}; letter-spacing: 0.42em; text-transform: uppercase;
+        }
+        .wk-eyebrow .rule { display: inline-block; width: clamp(28px, 5vw, 64px); height: 1px; background: ${GOLD}; opacity: 0.5; }
+        .wk-eyebrow .roman { color: rgba(255,255,255,0.32); letter-spacing: 0.3em; }
+
+        .wk-title { margin: 0; }
+        .wk-line { display: block; overflow: hidden; line-height: 0.92; }
+        .wk-line > span {
+          display: inline-block;
+          font-family: ${DISPLAY}; font-weight: 300; font-style: italic; color: #fff;
+          font-size: clamp(3.4rem, 13vw, 12rem); letter-spacing: -0.025em;
+          will-change: transform;
+        }
+        .wk-line .gold { color: ${GOLD}; }
+
+        .wk-accent {
+          margin: clamp(0.6rem, 1.5vh, 1.2rem) 0 0;
+          font-family: ${NUSRAT}; font-size: clamp(1.5rem, 3vw, 2.6rem); color: ${GOLD};
+        }
+        .wk-lead {
+          margin: clamp(1.8rem, 4vh, 2.8rem) 0 0; max-width: 34rem;
+          font-family: ${SANS}; font-size: clamp(0.92rem, 1vw, 1.06rem); font-weight: 300;
+          color: rgba(255,255,255,0.5); line-height: 1.85;
+        }
+        .wk-hero-foot {
+          display: flex; align-items: center; gap: 0.9rem; margin-top: clamp(2rem, 5vh, 3.2rem);
+          font-family: ${SANS}; font-size: 0.64rem; font-weight: 600; letter-spacing: 0.3em;
+          text-transform: uppercase; color: rgba(255,255,255,0.3);
+        }
+        .wk-hero-foot .dotsep { width: 4px; height: 4px; border-radius: 50%; background: ${GOLD}; opacity: 0.7; }
+
+        /* ── FILTER ── */
+        .wk-filters {
+          display: flex; flex-wrap: wrap; gap: clamp(1.2rem, 3vw, 2.4rem);
+          padding: 0 clamp(1.5rem, 6vw, 7rem) clamp(1.5rem, 3vh, 2.4rem);
+          max-width: 1500px; margin: 0 auto;
+        }
+        .wk-filter {
+          position: relative; background: none; border: none; padding: 0 0 0.5rem; cursor: pointer;
+          font-family: ${SANS}; font-size: 0.68rem; font-weight: 600; letter-spacing: 0.22em;
+          text-transform: uppercase; color: rgba(255,255,255,0.35); transition: color 0.4s ease;
+        }
+        .wk-filter:hover { color: rgba(255,255,255,0.7); }
+        .wk-filter[data-active='true'] { color: ${GOLD}; }
+        .wk-filter::after {
+          content: ''; position: absolute; left: 0; bottom: 0; height: 1px; width: 0; background: ${GOLD};
+          transition: width 0.45s cubic-bezier(0.16,0.84,0.44,1);
+        }
+        .wk-filter[data-active='true']::after { width: 100%; }
+
+        /* ── LIST ── */
+        .wk-list { max-width: 1500px; margin: 0 auto; padding: 0 clamp(1.5rem, 6vw, 7rem) clamp(6rem, 14vh, 11rem); }
+
+        .wk-row {
+          position: relative; border-top: 1px solid rgba(255,255,255,0.07);
+          opacity: 0; transform: translateY(38px);
+          transition: opacity 0.9s cubic-bezier(0.16,0.84,0.44,1), transform 0.9s cubic-bezier(0.16,0.84,0.44,1);
+        }
+        .wk-row.in { opacity: 1; transform: translateY(0); }
+        .wk-row::before {
+          content: ''; position: absolute; top: -1px; left: 0; height: 1px; width: 0; background: ${GOLD};
+          transition: width 0.7s cubic-bezier(0.16,0.84,0.44,1);
+        }
+        .wk-row:hover::before { width: 100%; }
+        .wk-glow {
+          position: absolute; inset: 0; pointer-events: none; opacity: 0;
+          background: radial-gradient(60% 120% at 20% 50%, rgba(200,169,110,0.07), transparent 70%);
+          transition: opacity 0.6s ease;
+        }
+        .wk-row:hover .wk-glow, .wk-row[data-open='true'] .wk-glow { opacity: 1; }
+
+        .wk-row-main {
+          position: relative; display: grid;
+          grid-template-columns: minmax(0, 1fr); gap: 1.2rem;
+          padding: clamp(2.2rem, 4.5vh, 3.4rem) 0;
+        }
+        @media (min-width: 880px) {
+          .wk-row-main {
+            grid-template-columns: clamp(7rem, 11vw, 12rem) 1fr clamp(11rem, 16vw, 15rem);
+            gap: clamp(1.5rem, 3vw, 3.5rem); align-items: start;
+          }
+        }
+
+        .wk-num {
+          font-family: ${DISPLAY}; font-weight: 300; font-style: italic; line-height: 0.8;
+          font-size: clamp(3.2rem, 7vw, 7rem); letter-spacing: -0.02em;
+          color: transparent; -webkit-text-stroke: 1px rgba(200,169,110,0.45);
+          transition: color 0.5s ease, -webkit-text-stroke-color 0.5s ease; will-change: transform;
+        }
+        .wk-row:hover .wk-num, .wk-row[data-open='true'] .wk-num {
+          color: rgba(200,169,110,0.92); -webkit-text-stroke-color: transparent;
+        }
+
+        .wk-cat {
+          font-family: ${SANS}; font-size: 0.62rem; font-weight: 600; letter-spacing: 0.28em;
+          text-transform: uppercase; color: ${GOLD}; margin-bottom: 0.9rem;
+        }
+        .wk-name {
+          margin: 0; font-family: ${DISPLAY}; font-weight: 300; font-style: italic; color: #fff;
+          font-size: clamp(1.7rem, 3vw, 2.7rem); line-height: 1.12; letter-spacing: -0.01em;
+        }
+        .wk-feature {
+          display: inline-block; margin-left: 0.6rem; font-family: ${NUSRAT};
+          font-size: clamp(1.05rem, 1.5vw, 1.4rem); color: ${GOLD}; vertical-align: middle;
+        }
+        .wk-desc {
+          margin: 1rem 0 0; max-width: 42rem;
+          font-family: ${SANS}; font-size: clamp(0.85rem, 0.95vw, 0.96rem); font-weight: 300;
+          color: rgba(255,255,255,0.42); line-height: 1.85;
+        }
+        .wk-meta {
+          display: flex; flex-wrap: wrap; align-items: center; gap: 0.55rem 1.5rem; margin-top: 1.5rem;
+        }
+        .wk-meta span.m {
+          font-family: ${SANS}; font-size: 0.72rem; font-weight: 400; letter-spacing: 0.06em;
+          color: rgba(255,255,255,0.4);
+        }
+        .wk-level { display: inline-flex; align-items: center; gap: 0.4rem; }
+        .wk-dot { width: 5px; height: 5px; border-radius: 50%; background: rgba(255,255,255,0.18); }
+        .wk-dot[data-on='true'] { background: ${GOLD}; }
+        .wk-level-label {
+          font-family: ${SANS}; font-size: 0.72rem; color: rgba(255,255,255,0.4); margin-left: 0.15rem;
+        }
+
+        .wk-aside { display: flex; flex-direction: column; gap: 0.5rem; }
+        @media (min-width: 880px) { .wk-aside { align-items: flex-end; text-align: right; } }
+        .wk-price { font-family: ${DISPLAY}; font-weight: 300; color: #fff; font-size: clamp(1.4rem, 1.9vw, 1.9rem); }
+        .wk-spots {
+          font-family: ${SANS}; font-size: 0.66rem; font-weight: 500; letter-spacing: 0.16em;
+          text-transform: uppercase;
+        }
+        .wk-spots[data-tone='full'] { color: rgba(220,120,100,0.75); }
+        .wk-spots[data-tone='low'] { color: ${GOLD}; }
+        .wk-spots[data-tone='ok'] { color: rgba(255,255,255,0.32); }
+
+        .wk-reserve {
+          margin-top: 1.1rem; background: none; border: none; padding: 0; cursor: pointer;
+          display: inline-flex; align-items: center; gap: 0.8rem;
+        }
+        .wk-reserve .ln { display: inline-block; width: 1.4rem; height: 1px; background: ${GOLD}; transition: width 0.45s cubic-bezier(0.16,0.84,0.44,1); }
+        .wk-reserve:hover .ln { width: 2.6rem; }
+        .wk-reserve .lbl {
+          font-family: ${SANS}; font-size: 0.64rem; font-weight: 600; letter-spacing: 0.26em;
+          text-transform: uppercase; color: ${GOLD};
+        }
+
+        /* ── EXPAND ── */
+        .wk-expand { display: grid; grid-template-rows: 0fr; transition: grid-template-rows 0.6s cubic-bezier(0.16,0.84,0.44,1); }
+        .wk-expand[data-open='true'] { grid-template-rows: 1fr; }
+        .wk-expand-inner { overflow: hidden; }
+        .wk-expand-pad { padding: 0 0 clamp(2.4rem, 5vh, 3.4rem); }
+
+        .wk-form { display: grid; grid-template-columns: 1fr; gap: 1.6rem; max-width: 46rem; }
+        @media (min-width: 720px) { .wk-form { grid-template-columns: repeat(3, 1fr); } }
+        .wk-field, .wk-form-actions { opacity: 0; transform: translateY(14px); }
+        .wk-expand[data-open='true'] .wk-field,
+        .wk-expand[data-open='true'] .wk-form-actions { animation: wkFieldIn 0.7s cubic-bezier(0.16,0.84,0.44,1) forwards; }
+        @keyframes wkFieldIn { to { opacity: 1; transform: translateY(0); } }
+        .wk-field input {
+          width: 100%; background: transparent; padding: 0 0 0.7rem; outline: none; color: #fff;
+          border: none; border-bottom: 1px solid rgba(255,255,255,0.12);
+          font-family: ${SANS}; font-size: 0.98rem; font-weight: 300; transition: border-color 0.4s ease;
+        }
+        .wk-field input::placeholder { color: rgba(255,255,255,0.22); }
+        .wk-field input:focus { border-bottom-color: ${GOLD}; }
+        .wk-form-actions { grid-column: 1 / -1; display: flex; align-items: center; gap: 1.5rem; flex-wrap: wrap; }
+        .wk-submit {
+          position: relative; overflow: hidden; padding: 0.95rem 2.4rem; cursor: pointer;
+          background: transparent; border: 1px solid rgba(200,169,110,0.35); color: ${GOLD};
+          font-family: ${SANS}; font-size: 0.62rem; font-weight: 600; letter-spacing: 0.3em; text-transform: uppercase;
+        }
+        .wk-submit:disabled { opacity: 0.6; cursor: wait; }
+        .wk-submit > span { position: relative; z-index: 2; transition: color 0.4s ease; }
+        .wk-submit::after {
+          content: ''; position: absolute; inset: 0; background: ${GOLD};
+          transform: scaleX(0); transform-origin: left; transition: transform 0.5s cubic-bezier(0.16,0.84,0.44,1);
+        }
+        .wk-submit:not(:disabled):hover::after { transform: scaleX(1); }
+        .wk-submit:not(:disabled):hover > span { color: #060F0B; }
+        .wk-error { font-family: ${SANS}; font-size: 0.78rem; color: rgba(220,120,100,0.85); margin: 0; }
+
+        .wk-success { padding: 0.5rem 0 0.5rem; }
+        .wk-success-line { margin: 0; font-family: ${DISPLAY}; font-weight: 300; font-style: italic; color: #fff; font-size: clamp(1.2rem, 1.6vw, 1.6rem); }
+        .wk-cursive { font-family: ${NUSRAT}; color: ${GOLD}; font-style: normal; }
+        .wk-success-sub { margin: 0.6rem 0 0; font-family: ${SANS}; font-size: 0.85rem; font-weight: 300; color: rgba(255,255,255,0.4); }
+        .wk-text-link { margin-top: 1rem; background: none; border: none; padding: 0; cursor: pointer; font-family: ${SANS}; font-size: 0.62rem; font-weight: 600; letter-spacing: 0.25em; text-transform: uppercase; color: ${GOLD}; }
+
+        /* ── EMPTY ── */
+        .wk-empty { max-width: 1500px; margin: 0 auto; padding: 2rem clamp(1.5rem, 6vw, 7rem) 10rem; border-top: 1px solid rgba(255,255,255,0.07); }
+        .wk-empty-h { margin: 3rem 0 0; font-family: ${DISPLAY}; font-weight: 300; font-style: italic; color: rgba(255,255,255,0.55); font-size: clamp(1.4rem, 2.4vw, 2.2rem); }
+        .wk-empty-p { margin: 1rem 0 0; font-family: ${SANS}; font-size: 0.9rem; font-weight: 300; color: rgba(255,255,255,0.32); }
+        .wk-empty-p a { color: ${GOLD}; text-decoration: none; }
+      `}</style>
+
+      <div className="wk-grain" />
+
+      <div className="wk-content">
+        {/* HERO */}
+        <section className="wk-hero">
+          <div className="wk-eyebrow">
+            <span className="rule" />
+            The Neelakar Workshops
+            <span className="roman">{ROMAN}</span>
           </div>
-        ) : (
-          workshops.map((w) => {
-            const full = w.spotsLeft === 0
-            const open = openId === w.id
-            return (
-              <article key={w.id} className="border-t py-10 md:py-12" style={{ borderColor: 'rgba(255,255,255,0.06)' }}>
-                <div className="flex flex-col md:flex-row md:items-start gap-6 md:gap-10">
-                  {/* Date + category */}
-                  <div className="md:w-48 shrink-0">
-                    <p style={{
-                      fontFamily: SANS, fontSize: '0.68rem', fontWeight: 600, color: GOLD,
-                      letterSpacing: '0.3em', textTransform: 'uppercase',
-                    }}>
-                      {w.dateDisplay}
-                    </p>
-                    <p className="mt-2" style={{
-                      fontFamily: SANS, fontSize: '0.65rem', fontWeight: 400,
-                      color: 'rgba(255,255,255,0.3)', letterSpacing: '0.2em', textTransform: 'uppercase',
-                    }}>
-                      {w.category}
-                    </p>
-                    {w.highlight && (
-                      <p className="mt-3" style={{ fontFamily: NUSRAT, fontSize: '1.1rem', color: GOLD }}>
-                        featured.
-                      </p>
-                    )}
-                  </div>
+          <h1 className="wk-title">
+            <span className="wk-line"><span>A season</span></span>
+            <span className="wk-line"><span>of <em className="gold">craft.</em></span></span>
+          </h1>
+          <p className="wk-accent">small rooms, real craft.</p>
+          <p className="wk-lead">
+            Photography, film, and brand — taught the way we practise it. Working professionals,
+            limited seats, and the kind of attention you can only give a room of a few.
+          </p>
+          {hasWorkshops && (
+            <div className="wk-hero-foot">
+              <span>{workshops.length} {workshops.length === 1 ? 'session' : 'sessions'}</span>
+              <span className="dotsep" />
+              <span>One season</span>
+            </div>
+          )}
+        </section>
 
-                  {/* Body */}
-                  <div className="flex-1 min-w-0">
-                    <h2 style={{
-                      fontFamily: DISPLAY, fontSize: 'clamp(1.5rem, 2.4vw, 2.3rem)', fontWeight: 300,
-                      fontStyle: 'italic', color: '#fff', lineHeight: 1.2,
-                    }}>
-                      {w.title}
-                    </h2>
-                    {w.description && (
-                      <p className="mt-3 max-w-2xl" style={{
-                        fontFamily: SANS, fontSize: 'clamp(0.85rem, 0.95vw, 0.95rem)', fontWeight: 300,
-                        color: 'rgba(255,255,255,0.4)', lineHeight: 1.8,
-                      }}>
-                        {w.description}
-                      </p>
-                    )}
-                    <div className="flex flex-wrap gap-x-7 gap-y-2 mt-5">
-                      {[w.location, w.duration, w.level, w.instructor ? `Led by ${w.instructor}` : null]
-                        .filter(Boolean)
-                        .map((meta) => (
-                          <span key={meta as string} style={{
-                            fontFamily: SANS, fontSize: '0.72rem', fontWeight: 400,
-                            color: 'rgba(255,255,255,0.35)', letterSpacing: '0.08em',
-                          }}>
-                            {meta}
-                          </span>
-                        ))}
+        {/* FILTERS */}
+        {categories.length > 2 && (
+          <div className="wk-filters">
+            {categories.map((c) => (
+              <button
+                key={c}
+                className="wk-filter"
+                data-active={filter === c}
+                onClick={() => { setFilter(c); setOpenId(null) }}
+              >
+                {c}
+              </button>
+            ))}
+          </div>
+        )}
+
+        {/* LIST */}
+        {hasWorkshops ? (
+          <section className="wk-list">
+            {visible.map((w, i) => {
+              const full = w.spotsLeft === 0
+              const open = openId === w.id
+              const tone = full ? 'full' : w.spotsLeft <= 5 ? 'low' : 'ok'
+              return (
+                <article key={w.id} className="wk-row" data-open={open}>
+                  <div className="wk-glow" />
+                  <div className="wk-row-main">
+                    <div className="wk-num" aria-hidden="true">{String(i + 1).padStart(2, '0')}</div>
+
+                    <div className="wk-body">
+                      <div className="wk-cat">{w.category}</div>
+                      <h2 className="wk-name">
+                        {w.title}
+                        {w.highlight && <span className="wk-feature">featured.</span>}
+                      </h2>
+                      {w.description && <p className="wk-desc">{w.description}</p>}
+                      <div className="wk-meta">
+                        <span className="m">{w.dateDisplay}</span>
+                        <span className="m">{w.location}</span>
+                        <span className="m">{w.duration}</span>
+                        <LevelDots level={w.level} />
+                        {w.instructor && <span className="m">Led by {w.instructor}</span>}
+                      </div>
+                    </div>
+
+                    <div className="wk-aside">
+                      <div className="wk-price">{w.priceDisplay}</div>
+                      <div className="wk-spots" data-tone={tone}>
+                        {full ? 'Fully booked' : `${w.spotsLeft} ${w.spotsLeft === 1 ? 'seat' : 'seats'} left`}
+                      </div>
+                      {!full && (
+                        <button
+                          className="wk-reserve"
+                          aria-expanded={open}
+                          onClick={() => setOpenId(open ? null : w.id)}
+                        >
+                          <span className="ln" />
+                          <span className="lbl">{open ? 'Close' : 'Reserve'}</span>
+                        </button>
+                      )}
                     </div>
                   </div>
 
-                  {/* Price + CTA */}
-                  <div className="md:w-52 shrink-0 md:text-right">
-                    <p style={{
-                      fontFamily: DISPLAY, fontSize: 'clamp(1.2rem, 1.6vw, 1.6rem)', fontWeight: 300,
-                      color: '#fff',
-                    }}>
-                      {w.priceDisplay}
-                    </p>
-                    <p className="mt-1" style={{
-                      fontFamily: SANS, fontSize: '0.68rem', fontWeight: 400,
-                      color: full ? 'rgba(220,120,100,0.7)' : w.spotsLeft <= 5 ? GOLD : 'rgba(255,255,255,0.3)',
-                      letterSpacing: '0.15em', textTransform: 'uppercase',
-                    }}>
-                      {full ? 'Fully booked' : `${w.spotsLeft} ${w.spotsLeft === 1 ? 'spot' : 'spots'} left`}
-                    </p>
-                    {!full && (
-                      <button
-                        onClick={() => setOpenId(open ? null : w.id)}
-                        className="mt-4 group inline-flex items-center gap-3"
-                        style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}
-                      >
-                        <span className="h-px w-5 transition-all duration-400 group-hover:w-10"
-                          style={{ backgroundColor: GOLD, display: 'inline-block' }} />
-                        <span style={{
-                          fontFamily: SANS, fontSize: '0.62rem', fontWeight: 600, color: GOLD,
-                          letterSpacing: '0.25em', textTransform: 'uppercase',
-                        }}>
-                          {open ? 'Close' : 'Reserve'}
-                        </span>
-                      </button>
-                    )}
+                  <div className="wk-expand" data-open={open && !full}>
+                    <div className="wk-expand-inner">
+                      <div className="wk-expand-pad">
+                        {open && !full && <RegisterForm workshop={w} onDone={() => setOpenId(null)} />}
+                      </div>
+                    </div>
                   </div>
-                </div>
-
-                {open && !full && <RegisterForm workshop={w} onDone={() => setOpenId(null)} />}
-              </article>
-            )
-          })
+                </article>
+              )
+            })}
+          </section>
+        ) : (
+          <div className="wk-empty">
+            <p className="wk-empty-h">The next season is being written.</p>
+            <p className="wk-empty-p">
+              New workshops are announced on{' '}
+              <a href="https://www.instagram.com/neelakar_house" target="_blank" rel="noopener noreferrer">@Neelakar_House</a> first.
+            </p>
+          </div>
         )}
-      </section>
+      </div>
     </main>
   )
 }
