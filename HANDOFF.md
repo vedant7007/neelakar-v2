@@ -91,12 +91,26 @@ NUSRAT  = Custom cursive (public/fonts/nusrat-regular.otf)
 - 4-act journey: Opening → Beneath Surface → Resolution → Fin
 - Service selector, budget/timeline, personality questions
 - Multi-step with review before submit
+- **Submits for real**: validates name/email, POSTs to `/api/submissions`, sending state + error handling
 
-### Admin Dashboard (`/admin`)
-Full CMS: submissions, customers, workshops (with certificate generation), testimonials, portfolio, site content, email (single + bulk), analytics dashboard, face biometric auth.
+**`/workshops` — Full Workshops Page** (DB-driven, admin-controlled)
+- Sections: hero (masked GSAP reveal) → "The Idea" → review (video placeholder + quote) → "What you'll learn" (4 pillars) → "The Programme" (upcoming sessions) → CTA → shared footer
+- Programme list pulls active workshops from DB; editorial "Programme" treatment (outlined gold numerals, drawn hairlines, expand-to-enroll)
+- Inline registration → `POST /api/workshops/[id]/register` (creates submission + enrollment + customer, decrements spots, emails confirmation)
+- Review quote is admin-controlled via a testimonial with `context: 'workshop'`
+- `?preview=1` shows sample sessions for design review before real data is seeded
+- Component: `WorkshopsClient.tsx`
 
-### API Routes (27 endpoints)
-Auth, submissions, customers, workshops, enrollments, certificates, testimonials, portfolio, brands, services, content, email, analytics, seed.
+### Admin Dashboard (`/admin`) — Hidden
+Full CMS: submissions, customers, workshops (with certificate generation + per-workshop enrollment lists), testimonials, portfolio, site content, email (single + bulk), analytics dashboard, face biometric auth.
+
+**Access is hidden** — no visible link:
+- Login at `/admin/login` (`AdminLoginPage`). Middleware (`src/lib/supabase/middleware.ts`) redirects unauthenticated `/admin/*` → `/admin/login`; signed-in users are redirected away from the login page.
+- **Hidden gateway** (`AdminGateway.tsx`, mounted in `(site)/layout.tsx`): typing `NEXT_PUBLIC_ADMIN_SEQUENCE` anywhere on the public site (outside inputs) opens the login.
+- First admin created via `POST /api/auth/register` with `ADMIN_REGISTRATION_KEY` (password 10+ chars, upper/lower/number).
+
+### API Routes (~30 endpoints)
+Auth (register, face register/verify), submissions, customers, workshops, enrollments, **workshop public register**, certificates, testimonials, portfolio, brands, services, content, email, analytics, seed (auth-protected).
 
 ---
 
@@ -180,24 +194,29 @@ public/
 - **Navbar hides** on `/create-with-us` and all `/production/*` sub-routes. Each sub-page handles its own back navigation.
 - **`window.__lenis`**: Lenis instance exposed globally via SmoothScroll component.
 - **React Compiler enabled**: `reactCompiler: true` in next.config.ts.
+- **Canonical URL**: single source of truth in `src/lib/site.ts` (`SITE_URL`, env-overridable via `NEXT_PUBLIC_SITE_URL`, defaults to `https://neelakar.com`). OG/Twitter cards fetch assets from `ASSET_ORIGIN` so previews survive DNS propagation.
+- **Photography & videography are DB-driven**: server components query `portfolio_items` by `context` (`photography` / `videography`), falling back to placeholders when empty. Client components: `PhotographyClient.tsx`, `VideographyClient.tsx`.
+- **Browser verification**: Playwright is a dev dependency; `scripts/*.mjs` drive headless screenshots against the dev server.
 
 ---
 
 ## What's Been Built (Complete)
 - Full homepage with 6 animated sections
 - Production page with 6 sections + portfolio gateway
-- Photography page (yzavoku-style orbit canvas)
-- Videography page (jasonbergh-style cinematic hero)
-- Create With Us interactive form
-- Full admin dashboard with CMS
-- Email system (single + bulk)
-- Workshop management + certificate generation
-- Face biometric auth for admin
+- Photography & videography portfolios (DB-driven, admin-controlled, placeholder fallback)
+- Full multi-section Workshops page (DB-driven list + online registration)
+- Create With Us interactive form (submits for real)
+- Hidden admin dashboard with full CMS + login + biometric auth
+- Email system (single + bulk + workshop/confirmation templates)
+- Workshop management, enrollment lists + certificate generation
+- SEO infra (sitemap, robots, OG/Twitter cards, canonical), branded 404/error pages, security headers
 
 ## What Could Come Next
-- Replace picsum placeholder images with real Neelakar portfolio images
-- Add real video content to videography page
-- Mobile polish pass on all production sub-pages
-- SEO tuning for production pages
-- Performance optimization (image lazy loading, canvas optimization)
-- Additional portfolio sub-pages or individual project detail pages
+- Replace picsum/placeholder images with real Neelakar portfolio work (Admin → Portfolio)
+- Add real video files to the videography player and workshop review
+- Seed real workshops + testimonials via the admin
+- Configure `RESEND_API_KEY` so emails send; verify neelakar.com in Resend
+- Point neelakar.com (Wix DNS) at Vercel — see README → Deployment
+- Performance pass (image lazy loading, canvas optimization), role-based admin permissions
+
+See `PROJECT_STATUS.md` for the client-facing done / needs-input / optional breakdown.
