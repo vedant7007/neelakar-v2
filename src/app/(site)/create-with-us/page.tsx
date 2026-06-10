@@ -189,9 +189,28 @@ function Q({ label, hint, children }: { label: string; hint?: string; children: 
 /* ══════════════════════════════════════════
    MAIN
    ══════════════════════════════════════════ */
+function composeMessage(f: FormData): string {
+  return [
+    f.company && `Company / Role: ${f.company}`,
+    f.howFound && `Found us via: ${f.howFound}`,
+    f.challenges.length > 0 && `Challenges: ${f.challenges.join(', ')}`,
+    f.flavors.length > 0 && `Brand personality: ${f.flavors.join(', ')}`,
+    f.audiences.length > 0 && `Audiences: ${f.audiences.join(', ')}`,
+    f.priorities.length > 0 && `Priorities: ${f.priorities.join(', ')}`,
+    f.timeline && `Timeline: ${f.timeline}`,
+    f.budget && `Budget: ${f.budget}`,
+    f.success.length > 0 && `Success looks like: ${f.success.join(', ')}`,
+    f.note && `Note: ${f.note}`,
+  ].filter(Boolean).join('\n').slice(0, 5000)
+}
+
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+
 export default function CreateWithUsPage() {
   const [step, setStep] = useState(0)
   const [form, setForm] = useState<FormData>(INIT)
+  const [submitting, setSubmitting] = useState(false)
+  const [formError, setFormError] = useState('')
   const formRef = useRef<HTMLDivElement>(null)
   const heroRef = useRef<HTMLDivElement>(null)
   const imageRefs = useRef<(HTMLDivElement | null)[]>([])
@@ -272,16 +291,59 @@ export default function CreateWithUsPage() {
     }, undefined, 0.6)
   }, [])
 
+  const formStateRef = useRef(form)
+  formStateRef.current = form
+  const submittingRef = useRef(false)
+  submittingRef.current = submitting
+
+  const advance = useCallback(async () => {
+    const s = stepRef.current
+    const f = formStateRef.current
+    if (submittingRef.current) return
+
+    if (s === 0) {
+      if (!f.name.trim()) { setFormError('Tell us your name before we begin.'); return }
+      if (!EMAIL_RE.test(f.email.trim())) { setFormError('We need a valid email to reach you.'); return }
+      setFormError('')
+      go(1)
+      return
+    }
+    if (s === 1) { setFormError(''); go(2); return }
+    if (s === 2) {
+      setFormError('')
+      setSubmitting(true)
+      try {
+        const res = await fetch('/api/submissions', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            type: 'general',
+            name: f.name.trim(),
+            email: f.email.trim(),
+            serviceInterest: f.services.join(', ').slice(0, 100) || undefined,
+            message: composeMessage(f) || undefined,
+          }),
+        })
+        if (!res.ok) throw new Error(`Submission failed (${res.status})`)
+        go(3)
+      } catch {
+        setFormError('Something broke on the way. Try again — or write to us directly.')
+      } finally {
+        setSubmitting(false)
+      }
+    }
+  }, [go])
+
   useEffect(() => {
     const handle = (e: KeyboardEvent) => {
       if (e.key === 'Enter' && !e.shiftKey && stepRef.current < 3) {
         if (document.activeElement?.tagName === 'TEXTAREA') return
-        go(stepRef.current === 2 ? 3 : stepRef.current + 1)
+        advance()
       }
     }
     window.addEventListener('keydown', handle)
     return () => window.removeEventListener('keydown', handle)
-  }, [go])
+  }, [advance])
 
   const progress = ((step + 1) / ACTS.length) * 100
   const imageOnLeft = step % 2 === 0
@@ -511,7 +573,8 @@ export default function CreateWithUsPage() {
                   }}>
                     Expect to hear back within 48 hours.<br />
                     Until then —{' '}
-                    <a href="#" className="transition-opacity duration-300 hover:opacity-70"
+                    <a href="https://www.instagram.com/neelakar_house" target="_blank" rel="noopener noreferrer"
+                      className="transition-opacity duration-300 hover:opacity-70"
                       style={{ color: GOLD, textDecoration: 'none' }}>@Neelakar_House</a>
                   </p>
                 </div>
@@ -530,6 +593,12 @@ export default function CreateWithUsPage() {
           </div>
 
           {/* ── NAVIGATION ── */}
+          {step < 3 && formError && (
+            <p className="pt-4" style={{
+              fontFamily: SANS, fontSize: 'clamp(0.72rem, 0.78vw, 0.82rem)',
+              fontWeight: 400, color: 'rgba(220,120,100,0.85)', letterSpacing: '0.04em',
+            }}>{formError}</p>
+          )}
           {step < 3 && (
             <div className="flex items-center justify-between pt-8 mt-4 border-t"
               style={{ borderColor: 'rgba(255,255,255,0.04)' }}>
@@ -546,16 +615,18 @@ export default function CreateWithUsPage() {
                 </button>
               ) : <div />}
 
-              <button onClick={() => go(step === 2 ? 3 : step + 1)}
+              <button onClick={advance} disabled={submitting}
                 className="group relative overflow-hidden px-10 py-4 transition-all duration-300"
                 style={{
                   fontFamily: SANS, fontSize: 'clamp(0.62rem, 0.68vw, 0.7rem)',
                   fontWeight: 600, letterSpacing: '0.35em', textTransform: 'uppercase',
                   backgroundColor: 'transparent', color: GOLD,
-                  border: '1px solid rgba(200,169,110,0.3)', cursor: 'pointer',
+                  border: '1px solid rgba(200,169,110,0.3)',
+                  cursor: submitting ? 'wait' : 'pointer',
+                  opacity: submitting ? 0.6 : 1,
                 }}>
                 <span className="relative z-10 transition-colors duration-400 group-hover:text-[#060F0B]">
-                  {step === 2 ? 'Submit' : 'Continue'}
+                  {step === 2 ? (submitting ? 'Sending…' : 'Submit') : 'Continue'}
                 </span>
                 <span className="absolute inset-0 origin-left scale-x-0 group-hover:scale-x-100 transition-transform duration-500 ease-out"
                   style={{ backgroundColor: GOLD }} />

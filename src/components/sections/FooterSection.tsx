@@ -20,10 +20,10 @@ interface Particle {
 }
 
 const FOOTER_LINKS = [
-  { text: 'Work', href: '#' },
-  { text: 'Studio', href: '#' },
+  { text: 'Production', href: '/production' },
+  { text: 'Photography', href: '/production/photography' },
+  { text: 'Films', href: '/production/videography' },
   { text: 'Inquire', href: '/create-with-us' },
-  { text: 'Journal', href: '#' },
 ]
 
 export default function FooterSection() {
@@ -198,7 +198,8 @@ export default function FooterSection() {
             <span style={{ fontFamily: SANS, fontSize: 'clamp(0.55rem, 0.6vw, 0.65rem)', fontWeight: 400, color: 'rgba(255,255,255,0.25)', letterSpacing: '0.15em' }}>
               &copy; {new Date().getFullYear()} Neelakar Creative House
             </span>
-            <a href="#" style={{ fontFamily: SANS, fontSize: 'clamp(0.55rem, 0.6vw, 0.65rem)', fontWeight: 400, color: 'rgba(255,255,255,0.25)', letterSpacing: '0.15em', textDecoration: 'none' }}>
+            <a href="https://www.instagram.com/neelakar_house" target="_blank" rel="noopener noreferrer"
+              style={{ fontFamily: SANS, fontSize: 'clamp(0.55rem, 0.6vw, 0.65rem)', fontWeight: 400, color: 'rgba(255,255,255,0.25)', letterSpacing: '0.15em', textDecoration: 'none' }}>
               @Neelakar_House
             </a>
           </div>

@@ -1,4 +1,4 @@
-import Image from 'next/image'
+import HomeCornerLogo from '@/components/HomeCornerLogo'
 import MagazineCoverHero from '@/components/sections/MagazineCoverHero'
 import HandwrittenStatementSection from '@/components/sections/HandwrittenStatementSection'
 import ImageTextCollapseSection from '@/components/sections/ImageTextCollapseSection'
@@ -9,18 +9,8 @@ import FooterSection from '@/components/sections/FooterSection'
 export default function Home() {
   return (
     <main className="overflow-x-hidden" style={{ backgroundColor: '#060F0B' }}>
-      {/* Fixed corner logo */}
-      <div className="fixed top-5 left-5 z-[100] pointer-events-none mix-blend-difference">
-        <div className="relative w-[44px] h-[44px]">
-          <Image
-            src="/NCH_logo_white.png"
-            alt="Neelakar"
-            fill
-            className="object-contain opacity-80"
-            sizes="44px"
-          />
-        </div>
-      </div>
+      {/* Fixed corner logo — hides when Navbar takes over */}
+      <HomeCornerLogo />
 
       <MagazineCoverHero />
       <HandwrittenStatementSection />

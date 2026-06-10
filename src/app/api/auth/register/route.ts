@@ -7,7 +7,10 @@ import { z } from 'zod'
 const registerSchema = z.object({
   name: z.string().min(1).max(100),
   email: z.string().email(),
-  password: z.string().min(8),
+  password: z.string().min(10).regex(
+    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$/,
+    'Password must contain an uppercase letter, a lowercase letter, and a number',
+  ),
   registrationKey: z.string().min(1),
 })
 

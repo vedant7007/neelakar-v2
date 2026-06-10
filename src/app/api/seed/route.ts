@@ -1,10 +1,15 @@
 import { NextResponse } from 'next/server'
 import { db } from '@/lib/db'
 import { submissions, customers, workshops, testimonials, portfolioItems, brands, siteContent } from '@/lib/db/schema'
+import { createClient } from '@/lib/supabase/server'
 
 export const dynamic = 'force-dynamic'
 
 export async function POST() {
+  const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+
   const results: Record<string, string> = {}
 
   async function seed(name: string, fn: () => Promise<unknown>) {
