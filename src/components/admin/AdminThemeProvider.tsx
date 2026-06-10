@@ -18,6 +18,8 @@ export default function AdminThemeProvider({ children }: { children: ReactNode }
 
   useEffect(() => {
     const saved = localStorage.getItem('neelakar-admin-theme') as AdminTheme | null
+    // One-time hydration of the saved theme from localStorage on mount.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     if (saved) setTheme(saved)
   }, [])
 

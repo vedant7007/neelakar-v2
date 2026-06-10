@@ -73,7 +73,8 @@ export default function EnrollmentsPage({ params }: { params: Promise<{ id: stri
   const toggleSelect = (enrollmentId: string) => {
     setSelected(prev => {
       const next = new Set(prev)
-      next.has(enrollmentId) ? next.delete(enrollmentId) : next.add(enrollmentId)
+      if (next.has(enrollmentId)) next.delete(enrollmentId)
+      else next.add(enrollmentId)
       return next
     })
   }

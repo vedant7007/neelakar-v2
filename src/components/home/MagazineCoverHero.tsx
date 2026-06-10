@@ -3,17 +3,18 @@
 import { useRef, useState, useEffect, useLayoutEffect } from 'react'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
-import LiquidEther from '@/components/LiquidEther'
-import Shuffle from '@/components/Shuffle'
+import LiquidEther from '@/components/shared/LiquidEther'
+import Shuffle from '@/components/shared/Shuffle'
+import { COLORS, FONTS } from '@/lib/theme'
 
 gsap.registerPlugin(ScrollTrigger)
 
-const BG = '#060F0B'
-const GOLD = '#C8A96E'
+const BG = COLORS.bg
+const GOLD = COLORS.gold
 const TITLE_RED = 'rgba(160, 28, 28, 0.9)'
-const DISPLAY = "var(--font-neel-display), 'Playfair Display', serif"
-const SANS = "var(--font-dm-sans), 'DM Sans', sans-serif"
-const NUSRAT = "'Nusrat', cursive"
+const DISPLAY = FONTS.display
+const SANS = FONTS.sans
+const NUSRAT = FONTS.nusrat
 
 const ETHER_COLORS = ['#0FF0FC', '#7B2FFF', '#00FF88', '#5B00D4', '#00C9FF'] as const
 

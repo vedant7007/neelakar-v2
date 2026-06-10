@@ -3,13 +3,14 @@
 import { useRef, useLayoutEffect } from 'react'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
-import Shuffle from '@/components/Shuffle'
+import Shuffle from '@/components/shared/Shuffle'
+import { COLORS, FONTS } from '@/lib/theme'
 
 gsap.registerPlugin(ScrollTrigger)
 
-const GOLD = '#C8A96E'
-const BG_DARK = '#060F0B'
-const SANS = "var(--font-dm-sans), 'DM Sans', sans-serif"
+const GOLD = COLORS.gold
+const BG_DARK = COLORS.bg
+const SANS = FONTS.sans
 
 const SERVICE_CARDS = [
   {

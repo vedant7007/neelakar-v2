@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server'
 import { db } from '@/lib/db'
 import { submissions, customers, workshops, emailLogs } from '@/lib/db/schema'
 import { createClient } from '@/lib/supabase/server'
-import { sql, eq, gte, and } from 'drizzle-orm'
+import { sql, eq, gte } from 'drizzle-orm'
 
 export async function GET() {
   try {

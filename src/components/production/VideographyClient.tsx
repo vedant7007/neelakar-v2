@@ -3,10 +3,11 @@
 import { useState, useEffect, useCallback, useRef } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
+import { FONTS } from '@/lib/theme'
 
 const BG = 'rgb(30,30,28)'
 const LEMON = '#ffeec8'
-const SANS = "var(--font-dm-sans), 'DM Sans', sans-serif"
+const SANS = FONTS.sans
 
 export interface VideoProject {
   title: [string, string]

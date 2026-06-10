@@ -3,14 +3,15 @@
 import { useRef, useLayoutEffect } from 'react'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
+import { COLORS, FONTS } from '@/lib/theme'
 
 gsap.registerPlugin(ScrollTrigger)
 
-const BG_CREAM = '#E8E2D9'
-const SANS = "var(--font-dm-sans), 'DM Sans', sans-serif"
-const NUSRAT = "'Nusrat', cursive"
+const BG_CREAM = COLORS.cream
+const SANS = FONTS.sans
+const NUSRAT = FONTS.nusrat
 const INK = '#1C1C1A'
-const GOLD = '#C8A96E'
+const GOLD = COLORS.gold
 
 export default function HandwrittenStatementSection() {
   const containerRef = useRef<HTMLDivElement>(null)

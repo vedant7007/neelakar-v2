@@ -42,10 +42,11 @@ export default function FaceCapture({ onCapture, onCancel, mode }: FaceCapturePr
         const faceapi = await import('@vladmandic/face-api')
         if (cancelledRef.current) return
 
-        // Force WebGL GPU acceleration
-        if (faceapi.tf) {
-          await (faceapi.tf as any).setBackend('webgl')
-          await (faceapi.tf as any).ready()
+        // Force WebGL GPU acceleration (face-api's bundled tf handle is untyped)
+        const tf = faceapi.tf as unknown as { setBackend: (b: string) => Promise<void>; ready: () => Promise<void> } | undefined
+        if (tf) {
+          await tf.setBackend('webgl')
+          await tf.ready()
         }
 
         setProgress(20)

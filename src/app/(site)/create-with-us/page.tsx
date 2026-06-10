@@ -2,14 +2,16 @@
 
 import { useState, useRef, useCallback, useEffect } from 'react'
 import Image from 'next/image'
+import Link from 'next/link'
 import gsap from 'gsap'
-import Shuffle from '@/components/Shuffle'
+import Shuffle from '@/components/shared/Shuffle'
+import { COLORS, FONTS } from '@/lib/theme'
 
-const BG = '#060F0B'
-const GOLD = '#C8A96E'
-const SANS = "var(--font-dm-sans), 'DM Sans', sans-serif"
-const DISPLAY = "var(--font-neel-display), 'Playfair Display', serif"
-const NUSRAT = "'Nusrat', cursive"
+const BG = COLORS.bg
+const GOLD = COLORS.gold
+const SANS = FONTS.sans
+const DISPLAY = FONTS.display
+const NUSRAT = FONTS.nusrat
 
 const ACT_IMAGES = [
   'https://picsum.photos/id/1062/1200/1800',
@@ -579,14 +581,14 @@ export default function CreateWithUsPage() {
                   </p>
                 </div>
                 <div className="q-block mt-12">
-                  <a href="/" className="inline-flex items-center gap-4 group" style={{ textDecoration: 'none' }}>
+                  <Link href="/" className="inline-flex items-center gap-4 group" style={{ textDecoration: 'none' }}>
                     <span className="h-px w-6 transition-all duration-500 group-hover:w-12"
                       style={{ backgroundColor: GOLD, display: 'inline-block' }} />
                     <span style={{
                       fontFamily: SANS, fontSize: 'clamp(0.65rem, 0.72vw, 0.75rem)',
                       fontWeight: 600, color: GOLD, letterSpacing: '0.3em', textTransform: 'uppercase',
                     }}>Back to home</span>
-                  </a>
+                  </Link>
                 </div>
               </>
             )}

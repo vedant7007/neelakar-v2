@@ -1,10 +1,11 @@
 'use client'
 
 import Link from 'next/link'
-import OrbitCanvas from '@/components/OrbitCanvas'
+import OrbitCanvas from '@/components/production/OrbitCanvas'
+import { COLORS, FONTS } from '@/lib/theme'
 
-const BG = '#060F0B'
-const SANS = "var(--font-dm-sans), 'DM Sans', sans-serif"
+const BG = COLORS.bg
+const SANS = FONTS.sans
 
 const navLink: React.CSSProperties = {
   fontFamily: SANS,

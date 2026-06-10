@@ -6,7 +6,7 @@ Production-grade website for **Neelakar Creative House**, a luxury creative stud
 - **Stack:** Next.js 16 (App Router) · React 19 · TypeScript · Tailwind v4 · GSAP + Lenis · Three.js · Supabase (Auth + Postgres) · Drizzle ORM · Resend
 - **Hosting:** Vercel (auto-deploys from `main`)
 
-> ⚠️ **This is Next.js 16** — APIs differ from older versions. Read the relevant guide in `node_modules/next/dist/docs/` before using unfamiliar APIs. See `AGENTS.md`.
+> ⚠️ **This is Next.js 16** — several APIs and conventions differ from older versions (e.g. `searchParams` is async). When using an unfamiliar API, check the bundled guides in `node_modules/next/dist/docs/` first.
 
 ---
 

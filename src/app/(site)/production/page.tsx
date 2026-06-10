@@ -5,15 +5,15 @@ import Image from 'next/image'
 import Link from 'next/link'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
-import Shuffle from '@/components/Shuffle'
+import Shuffle from '@/components/shared/Shuffle'
+import { COLORS, FONTS } from '@/lib/theme'
 
 gsap.registerPlugin(ScrollTrigger)
 
-const BG = '#060F0B'
-const GOLD = '#C8A96E'
-const CREAM = '#E8E2D9'
-const SANS = "var(--font-dm-sans), 'DM Sans', sans-serif"
-const DISPLAY = "var(--font-neel-display), 'Playfair Display', serif"
+const BG = COLORS.bg
+const GOLD = COLORS.gold
+const SANS = FONTS.sans
+const DISPLAY = FONTS.display
 
 const FEATURED = [
   {

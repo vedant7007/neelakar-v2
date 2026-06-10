@@ -1,7 +1,7 @@
 import { db } from '@/lib/db'
 import { portfolioItems } from '@/lib/db/schema'
 import { eq, and, asc } from 'drizzle-orm'
-import PhotographyClient from '@/components/PhotographyClient'
+import PhotographyClient from '@/components/production/PhotographyClient'
 
 export const dynamic = 'force-dynamic'
 

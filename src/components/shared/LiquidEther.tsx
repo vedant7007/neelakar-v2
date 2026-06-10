@@ -1,5 +1,10 @@
 'use client'
 
+/* eslint-disable @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars, react-hooks/unsupported-syntax --
+   Vendored WebGL fluid simulation. The THREE.js shader plumbing relies on dynamic
+   uniform types and inline simulation classes by design; retyping it would add no
+   safety and risk the GPU pipeline. */
+
 import React, { useEffect, useRef } from 'react'
 import * as THREE from 'three'
 

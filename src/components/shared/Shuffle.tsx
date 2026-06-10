@@ -160,27 +160,10 @@ const Shuffle: React.FC<ShuffleProps> = ({
         });
       };
 
-      const shuffledGlyph = (original: string) => {
-        const charset = scrambleCharset || DEFAULT_CHARSET;
-        let glyph = original;
-        while (charset.length > 1 && glyph.toUpperCase() === original.toUpperCase()) {
-          glyph = charset.charAt(Math.floor(Math.random() * charset.length));
-        }
-        return original === original.toLowerCase() ? glyph.toLowerCase() : glyph;
-      };
-
       const selectedCharacters = () => {
         const ratio = gsap.utils.random(0.3, 0.55);
         const count = chars.length < 3 ? 1 : Math.max(2, Math.round(chars.length * ratio));
         return gsap.utils.shuffle(chars.slice()).slice(0, count);
-      };
-
-      const directionalOffset = () => {
-        const amount = Math.min(5, Math.max(1.5, duration * 3));
-        if (shuffleDirection === 'left') return { x: -amount, y: 0 };
-        if (shuffleDirection === 'right') return { x: amount, y: 0 };
-        if (shuffleDirection === 'up') return { x: 0, y: -amount };
-        return { x: 0, y: amount };
       };
 
       const nextAmbientDelay = () => {

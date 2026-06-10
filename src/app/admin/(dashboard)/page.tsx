@@ -84,6 +84,7 @@ export default function AdminDashboard() {
   }
 
   const timeAgo = (dateStr: string) => {
+    // eslint-disable-next-line react-hooks/purity -- relative "x ago" label for display only
     const mins = Math.floor((Date.now() - new Date(dateStr).getTime()) / 60000)
     if (mins < 60) return `${mins}m ago`
     const hours = Math.floor(mins / 60)

@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { DM_Sans, Playfair_Display, Cormorant_Garamond } from "next/font/google";
+import { DM_Sans, Playfair_Display } from "next/font/google";
 import { SITE_URL } from "@/lib/site";
 import "./globals.css";
 
@@ -14,14 +14,6 @@ const playfair = Playfair_Display({
   variable: "--font-neel-display",
   subsets: ["latin"],
   weight: ["400", "500", "600", "700", "800", "900"],
-  style: ["normal", "italic"],
-  display: "swap",
-});
-
-const cormorant = Cormorant_Garamond({
-  variable: "--font-neel-script",
-  subsets: ["latin"],
-  weight: ["300", "400"],
   style: ["normal", "italic"],
   display: "swap",
 });
@@ -111,7 +103,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${dmSans.variable} ${playfair.variable} ${cormorant.variable} h-full`}
+      className={`${dmSans.variable} ${playfair.variable} h-full`}
     >
       <head>
         <link rel="stylesheet" href="https://use.typekit.net/qfi2uip.css" />

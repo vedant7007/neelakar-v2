@@ -1,14 +1,15 @@
 import Link from 'next/link'
+import { COLORS, FONTS } from '@/lib/theme'
 
-const GOLD = '#C8A96E'
-const DISPLAY = "var(--font-neel-display), 'Playfair Display', serif"
-const SANS = "var(--font-dm-sans), 'DM Sans', sans-serif"
+const GOLD = COLORS.gold
+const DISPLAY = FONTS.display
+const SANS = FONTS.sans
 
 export default function NotFound() {
   return (
     <main
       className="min-h-screen flex flex-col items-center justify-center px-6 text-center"
-      style={{ backgroundColor: '#060F0B' }}
+      style={{ backgroundColor: COLORS.bg }}
     >
       <span
         style={{

@@ -6,11 +6,12 @@ import Link from 'next/link'
 import Image from 'next/image'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
+import { COLORS, FONTS } from '@/lib/theme'
 
 gsap.registerPlugin(ScrollTrigger)
 
-const GOLD = '#C8A96E'
-const SANS = "var(--font-dm-sans), 'DM Sans', sans-serif"
+const GOLD = COLORS.gold
+const SANS = FONTS.sans
 
 const LINKS = [
   { label: 'Production', href: '/production' },
@@ -27,6 +28,8 @@ export default function Navbar() {
   useEffect(() => {
     if (hide) return
     if (!isHome) {
+      // Non-home routes reveal the navbar immediately — no scroll trigger needed.
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setShow(true)
       return
     }

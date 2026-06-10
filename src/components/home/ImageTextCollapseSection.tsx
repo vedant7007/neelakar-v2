@@ -4,14 +4,15 @@ import { useRef, useLayoutEffect } from 'react'
 import Image from 'next/image'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
+import { COLORS, FONTS } from '@/lib/theme'
 
 gsap.registerPlugin(ScrollTrigger)
 
-const BG = '#060F0B'
-const DISPLAY = "var(--font-neel-display), 'Playfair Display', serif"
-const SANS = "var(--font-dm-sans), 'DM Sans', sans-serif"
-const GOLD = '#C8A96E'
-const NUSRAT = "'Nusrat', cursive"
+const BG = COLORS.bg
+const DISPLAY = FONTS.display
+const SANS = FONTS.sans
+const GOLD = COLORS.gold
+const NUSRAT = FONTS.nusrat
 
 export default function ImageTextCollapseSection() {
   const containerRef = useRef<HTMLDivElement>(null)

@@ -3,14 +3,15 @@
 import { useState, useEffect, useLayoutEffect, useRef, useMemo } from 'react'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
-import FooterSection from '@/components/sections/FooterSection'
+import FooterSection from '@/components/shared/FooterSection'
+import { COLORS, FONTS } from '@/lib/theme'
 
 gsap.registerPlugin(ScrollTrigger)
 
-const GOLD = '#C8A96E'
-const DISPLAY = "var(--font-neel-display), 'Playfair Display', serif"
-const SANS = "var(--font-dm-sans), 'DM Sans', sans-serif"
-const NUSRAT = "'Nusrat', cursive"
+const GOLD = COLORS.gold
+const DISPLAY = FONTS.display
+const SANS = FONTS.sans
+const NUSRAT = FONTS.nusrat
 
 export interface PublicWorkshop {
   id: string

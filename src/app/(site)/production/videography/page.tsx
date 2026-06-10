@@ -1,7 +1,7 @@
 import { db } from '@/lib/db'
 import { portfolioItems } from '@/lib/db/schema'
 import { eq, and, asc } from 'drizzle-orm'
-import VideographyClient, { type VideoProject } from '@/components/VideographyClient'
+import VideographyClient, { type VideoProject } from '@/components/production/VideographyClient'
 
 export const dynamic = 'force-dynamic'
 

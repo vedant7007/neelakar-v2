@@ -1,7 +1,7 @@
-import SmoothScroll from "@/components/SmoothScroll";
-import SparkleClickEffect from "@/components/SparkleClickEffect";
-import Navbar from "@/components/Navbar";
-import AdminGateway from "@/components/AdminGateway";
+import SmoothScroll from "@/components/shared/SmoothScroll";
+import SparkleClickEffect from "@/components/shared/SparkleClickEffect";
+import Navbar from "@/components/shared/Navbar";
+import AdminGateway from "@/components/shared/AdminGateway";
 
 export default function SiteLayout({
   children,

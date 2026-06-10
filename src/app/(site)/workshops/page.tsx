@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 import { db } from '@/lib/db'
 import { workshops, testimonials } from '@/lib/db/schema'
 import { eq, and, asc } from 'drizzle-orm'
-import WorkshopsClient, { type PublicWorkshop, type WorkshopReview } from '@/components/WorkshopsClient'
+import WorkshopsClient, { type PublicWorkshop, type WorkshopReview } from '@/components/workshops/WorkshopsClient'
 
 export const dynamic = 'force-dynamic'
 

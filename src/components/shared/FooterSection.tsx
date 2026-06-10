@@ -1,11 +1,12 @@
 'use client'
 
 import { useRef, useCallback, useEffect } from 'react'
+import { COLORS, FONTS } from '@/lib/theme'
 
-const BG = '#060F0B'
-const GOLD = '#C8A96E'
+const BG = COLORS.bg
+const GOLD = COLORS.gold
 const BRAND_FONT = "'all-round-gothic', sans-serif"
-const SANS = "var(--font-dm-sans), 'DM Sans', sans-serif"
+const SANS = FONTS.sans
 
 interface Particle {
   x: number
